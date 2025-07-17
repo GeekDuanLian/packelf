@@ -1,0 +1,45 @@
+# Secrets:
+# RELEASE_TOKEN = write permission token
+
+name: build
+
+on:
+  workflow_dispatch:
+  push: { branches: [ main ] }
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        include:
+          - arch: x86
+            platform: 386
+            runner: ubuntu-24.04
+          - arch: x86_64
+            platform: amd64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            platform: arm64
+            runner: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.runner }}
+    env:
+      arch: ${{ matrix.arch }}
+      platform: ${{ matrix.platform }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build for ${{ matrix.arch }}
+      run: |
+        mkdir "${arch}"
+        podman run --platform=linux/"${platform}" --volume=./"${arch}":/result --volume=./:/workdir --workdir=/workdir debian:trixie-slim bash debian.sh
+
+    - name: Release result
+      env:
+        GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      run: |
+        ( cd "${arch}"; tar --numeric-owner --owner=0 --group=0 -czf ../"${arch}".tar.gz * )
+        ! gh release view result &>/dev/null &&
+        gh release create result "${arch}".tar.gz -n 'download here' ||
+        gh release upload result "${arch}".tar.gz --clobber
