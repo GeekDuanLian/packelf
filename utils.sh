@@ -6,7 +6,7 @@ pkg+=(bash curl less grep diffutils htop broot btop micro traceroute rsync netca
 bin+=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,btop,micro,traceroute,rsync,nc})
 etc+=(/etc/ssl/certs/ca-certificates.crt)
 
-install_dest /dev/stdin setup/utils.sh <<'EOF'
+install_dest -v /dev/stdin setup/utils.sh <<'EOF'
 # etc
 ln -vsf {${dest},}/etc/ssl/certs/ca-certificates.crt
 EOF

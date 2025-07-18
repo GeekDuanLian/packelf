@@ -3,11 +3,13 @@
 # openssh
 
 pkg+=(openssh-server openssh-client)
-bin+=(/usr/sbin/sshd /usr/bin/{ssh,scp,sftp,ssh-keygen})
+bin+=(/usr/sbin/sshd /usr/lib/openssh/{sshd-session,sshd-auth} /usr/bin/{ssh,scp,sftp,ssh-keygen})
 etc+=(/etc/ssh/moduli)
 
 # etc
-install -vDm644 /dev/stdin etc/ssh/sshd_config <<'EOF'
+install_dest -vDm644 /dev/stdin etc/ssh/sshd_config <<'EOF'
+SshdAuthPath ${dest}/sshd-auth
+SshdSessionPath ${dest}/sshd-session
 Subsystem sftp internal-sftp
 HostKey /etc/ssh/ssh_host_ed25519_key
 AuthorizedKeysFile .ssh/authorized_keys
