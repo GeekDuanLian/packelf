@@ -15,15 +15,13 @@ mkdir setup
 install_dest () { sed 's|\${dest}|'"${dest}"'|g' | install "${@}"; }
 for i in "${workdir}"/*.sh; do [[ "${i}" == "${self}" ]] || . "${i}"; done
 # setup head
-for i in setup/*.sh; do
-cat - "${i}" >"${i}".tmp <<'EOF'
+for i in setup/*.sh; do { cat - "${i}" | install /dev/stdin "${i}"; } <<'EOF'
 #!/bin/bash
 set -eo pipefail
 echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "${r}"; }
 trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
 
 EOF
-mv "${i}".tmp "${i}"
 done
 # check
 : "${pkg:?}" "${bin:?}" "${etc:?}"
