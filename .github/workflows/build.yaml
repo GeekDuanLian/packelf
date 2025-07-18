@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - arch: x86
+          - arch: i686
             platform: 386
             runner: ubuntu-24.04
           - arch: x86_64
