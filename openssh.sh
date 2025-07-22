@@ -3,6 +3,7 @@
 pkg=(openssh-server openssh-client)
 bin=(/usr/sbin/sshd /usr/lib/openssh/{sshd-session,sshd-auth} /usr/bin/{ssh,scp,sftp,ssh-keygen})
 etc=(/etc/ssh/moduli)
+: "${pkg:?}" "${bin:?}" "${etc:?}"
 
 # etc
 install_dest /etc/ssh/sshd_config <<'EOF'
@@ -59,4 +60,6 @@ ln -vsf {${dest},}/usr/lib/systemd/system/sshd.service
 systemctl daemon-reload
 systemctl stop sshd || :
 systemctl start sshd
+systemctl enable sshd
+systemctl status sshd
 EOF

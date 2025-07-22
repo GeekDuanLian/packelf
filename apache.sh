@@ -3,6 +3,7 @@
 pkg=(apache2)
 bin=(/usr/sbin/apache2)
 etc=(/usr/lib/apache2/modules)
+: "${pkg:?}" "${bin:?}" "${etc:?}"
 
 # etc
 install_dest /etc/apache2/apache2.conf <<'EOF'
@@ -11,7 +12,7 @@ User apache2
 Group apache2
 DefaultRuntimeDir /var/run/apache2
 PidFile /var/run/apache2/apache2.pid
-ErrorLog /dev/stderr
+ErrorLog "|/usr/bin/systemd-cat -t apache2 -p 5"
 LogLevel warn
 
 Timeout 300
@@ -19,6 +20,18 @@ KeepAlive On
 MaxKeepAliveRequests 100
 KeepAliveTimeout 5
 HostnameLookups Off
+
+# modules
+LoadModule mpm_event_module modules/mod_mpm_event.so
+StartServers            2
+MinSpareThreads         25
+MaxSpareThreads         75
+ThreadLimit             64
+ThreadsPerChild         25
+MaxRequestWorkers       150
+MaxConnectionsPerChild  0
+LoadModule authz_core_module modules/mod_authz_core.so
+LoadModule headers_module modules/mod_headers.so
 
 # privacy
 ServerTokens Prod
@@ -60,7 +73,7 @@ EOF
 install_setup <<'EOF'
 # user
 groupadd -f apache2
-useradd -g apache2 -d /var/empty/apache2 -s /usr/sbin/nologin apache2 || :
+useradd -g apache2 -Md /var/empty/apache2 -s /usr/sbin/nologin apache2 || :
 
 # dir
 mkdir -p /etc/apache2
@@ -75,4 +88,6 @@ ln -vsf {${dest},}/usr/lib/systemd/system/apache2.service
 systemctl daemon-reload
 systemctl stop apache2 || :
 systemctl start apache2
+systemctl enable apache2
+systemctl status apache2
 EOF
