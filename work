@@ -27,6 +27,7 @@ cat <<'HEADER'
 set -eo pipefail
 echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "${r}"; }
 trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
+cd ${dest}
 
 HEADER
 ) - | install_dest setup/"${1:?}.sh" 755; }; }

@@ -7,8 +7,6 @@ etc=(/etc/ssl/certs/ca-certificates.crt)
 
 # home
 install_dest home/bashrc <<'EOF'
-AssetID=
-
 # env
 PS1='\[\e]0;${AssetID:+${AssetID} }\H ${PWD}\a\]\[\e[1;33m\]\t \[\e[36m\]\H \[\e[35m\]${AssetID:+${AssetID} }\[\e[34m\]\w \[\e[0;91m\]${?#0}\[\e[0m\]\n\[\e[1;$(_ps1_c0)m\]\u \[\e[37m\]\$ \[\e[0m\]'
 _ps1_c0 () { [[ "${EUID}" == 0 ]] && { echo 31; return; }; echo 32; }
@@ -207,4 +205,7 @@ EOF
 install_setup <<'EOF'
 # etc
 ln -vsf {${dest},}/etc/ssl/certs/ca-certificates.crt
+
+# chattr
+chattr +i -RV ${dest}/config/{htop,btop,broot,micro}
 EOF
