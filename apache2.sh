@@ -81,7 +81,6 @@ mkdir -p /etc/apache2
 install -vd -o apache2 -g apache2 /var/empty/apache2
 
 # etc
-ln -vsf {${dest},}/etc/apache2/apache2.conf
 ln -vsf ${dest}/usr/lib/apache2/modules /etc/apache2/
 
 # service
