@@ -15,7 +15,6 @@ workdir='/workdir'
 install_dest () {
     local dst="${1:?}" mode="${2:-644}"
     [[ "${dst}" == /* ]] && dst="${dst:1}" # dst start with / but we need include it
-    [[ "${dst}" == setup/* ]] && mode='755'
     sed 's|\${dest}|'"${dest}"'|g' | install -vD"m${mode}" /dev/stdin "${dst}"
 }
 install_dir () {
@@ -30,7 +29,7 @@ echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "
 trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
 
 HEADER
-) - | install -vD /dev/stdin setup/"${1:?}.sh"; }; }
+) - | install_dest setup/"${1:?}.sh" 755; }; }
 
 # work
 for i in "${workdir}"/*.sh; do
