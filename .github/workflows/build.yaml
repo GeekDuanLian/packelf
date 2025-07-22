@@ -32,8 +32,11 @@ jobs:
 
     - name: Build for ${{ matrix.arch }}
       run: |
+        pkg="$( grep -h '^pkg=' ./*.sh | while read -r LINE; do : "${LINE:5}"; echo "${_::-1}"; done | tr '\n' ' ' )"
+        printf '%s\n' 'FROM debian:trixie-slim' 'RUN apt-get update && apt-get upgrade -y && apt-get install -y patchelf '"${pkg}" |
+        podman build --platform=linux/"${platform}" -f /dev/stdin -t worker .
         mkdir "${arch}"
-        podman run --platform=linux/"${platform}" --volume=./"${arch}":/result --volume=./:/workdir --workdir=/workdir debian:trixie-slim bash debian.sh
+        podman run --volume=./"${arch}":/result --volume=./:/workdir --workdir=/workdir worker bash ./work
 
     - name: Release result
       env:

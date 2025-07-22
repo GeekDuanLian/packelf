@@ -1,13 +1,11 @@
 #!/bin/false
 
-# openssh
-
-pkg+=(openssh-server openssh-client)
-bin+=(/usr/sbin/sshd /usr/lib/openssh/{sshd-session,sshd-auth} /usr/bin/{ssh,scp,sftp,ssh-keygen})
-etc+=(/etc/ssh/moduli)
+pkg=(openssh-server openssh-client)
+bin=(/usr/sbin/sshd /usr/lib/openssh/{sshd-session,sshd-auth} /usr/bin/{ssh,scp,sftp,ssh-keygen})
+etc=(/etc/ssh/moduli)
 
 # etc
-install_dest -vDm644 /dev/stdin etc/ssh/sshd_config <<'EOF'
+install_dest /etc/ssh/sshd_config <<'EOF'
 SshdAuthPath ${dest}/sshd-auth
 SshdSessionPath ${dest}/sshd-session
 Subsystem sftp internal-sftp
@@ -24,7 +22,7 @@ PrintMotd no
 EOF
 
 # service
-install_dest -vDm644 /dev/stdin usr/lib/systemd/system/sshd.service <<'EOF'
+install_dest /usr/lib/systemd/system/sshd.service <<'EOF'
 [Unit]
 Description=sshd
 After=network.target
@@ -47,9 +45,10 @@ RestartPreventExitStatus=255
 WantedBy=multi-user.target
 EOF
 
-install_dest -v /dev/stdin setup/openssh.sh <<'EOF'
+# setup
+install_setup <<'EOF'
 # dir
-ln -vsf /usr/lib64/security /usr/lib/security # pam path
+ln -vsf /usr/lib64/security /usr/lib/security
 
 # etc
 ln -vsf {${dest},}/etc/ssh/moduli
@@ -58,6 +57,6 @@ ln -vsf {${dest},}/etc/ssh/sshd_config
 # service
 ln -vsf {${dest},}/usr/lib/systemd/system/sshd.service
 systemctl daemon-reload
-systemctl stop sshd
+systemctl stop sshd || :
 systemctl start sshd
 EOF

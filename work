@@ -1,0 +1,67 @@
+#!/bin/bash
+set -eo pipefail
+echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "${r}"; }
+trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
+
+# dest
+dest='/opt/debian-bin'
+# dir
+cd /result
+workdir='/workdir'
+
+# https://packages.debian.org/index
+# postinst: /var/lib/dpkg/info/
+# rpm: rpm -q --scripts
+install_dest () {
+    local dst="${1:?}" mode="${2:-644}"
+    [[ "${dst}" == /* ]] && dst="${dst:1}" # dst start with / but we need include it
+    [[ "${dst}" == setup/* ]] && mode='755'
+    sed 's|\${dest}|'"${dest}"'|g' | install -vD"m${mode}" /dev/stdin "${dst}"
+}
+install_dir () {
+    local dst="${1:?}" mode="${2:-755}"
+    install -vd"m${mode}" "${dst}"
+}
+install_setup_ () { { cat <(
+cat <<'HEADER'
+#!/bin/bash
+set -eo pipefail
+echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "${r}"; }
+trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
+
+HEADER
+) - | install -vD /dev/stdin setup/"${1:?}.sh"; }; }
+
+# work
+for i in "${workdir}"/*.sh; do
+    # mkdir
+    : "${i##*/}"; name="${_%.sh}"
+    mkdir -v "${name}"
+    cd "${name}"
+    # source
+    install_setup () { install_setup_ "${name}"; }
+    . "${i}"
+    : "${pkg:?}" "${bin:?}" "${etc:?}"
+    # etc
+    cp -vLt ./ --parents -rn "${etc[@]}"
+    # bin
+    mkdir bin
+    cp -vLt "${_}" "${bin[@]}"
+    # ld
+    cp -vLt ./ "$( patchelf --print-interpreter /bin/bash )"
+    ld="${_##*/}"
+    # lib
+    mkdir lib
+    ldd bin/* | grep -oP '=>\s\K\S+' | sort | uniq | xargs -d '\n' cp -vLt "${_}"
+    chmod -v 644 "${_}"/*
+    # patchelf
+    patchelf --set-rpath '$ORIGIN/lib' --set-interpreter "${dest}/${ld}" bin/*
+    patchelf --set-rpath '$ORIGIN' lib/*
+    # move out bin
+    mv -vt ./ bin/*; rm -r bin
+    # done
+    cd ..
+done
+
+# done
+true
