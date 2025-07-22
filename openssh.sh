@@ -52,6 +52,7 @@ install_setup <<'EOF'
 ln -vsf /usr/lib64/security /usr/lib/security
 
 # etc
+rm -vf /etc/init.d/sshd
 ln -vsf {${dest},}/etc/ssh/moduli
 ln -vsf {${dest},}/etc/ssh/sshd_config
 

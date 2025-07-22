@@ -59,11 +59,12 @@ After=network.target remote-fs.target nss-lookup.target
 Environment="LANG=C"
 RuntimeDirectory=apache2
 RuntimeDirectoryMode=0755
+PrivateTmp=true
 ExecStartPre=${dest}/apache2 -t
 ExecStart=${dest}/apache2 -D FOREGROUND
 ExecReload=${dest}/apache2 -t
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
-PrivateTmp=true
+KillMode=mixed
 
 [Install]
 WantedBy=multi-user.target
