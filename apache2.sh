@@ -3,7 +3,7 @@
 pkg=(apache2)
 bin=(/usr/sbin/apache2)
 etc=(/usr/lib/apache2/modules)
-: "${pkg:?}" "${bin:?}" "${etc:?}"
+: "${pkg:?}" "${bin:?}" "${etc?}"
 
 # etc
 install_dest /etc/apache2/apache2.conf <<'EOF'
@@ -12,8 +12,9 @@ User apache2
 Group apache2
 DefaultRuntimeDir /var/run/apache2
 PidFile /var/run/apache2/apache2.pid
-ErrorLog "|/usr/bin/systemd-cat -t apache2 -p 5"
+ErrorLog /var/log/apache2/server-error.log
 LogLevel warn
+LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
 
 Timeout 300
 KeepAlive On
@@ -49,6 +50,21 @@ DocumentRoot /var/empty/apache2
 </Directory>
 EOF
 
+# logrotate
+install_dest /etc/logrotate.d/apache2 <<'EOF'
+/var/log/apache2/*.log {
+    daily
+    rotate 180
+    compress
+    missingok
+    nocreate
+    sharedscripts
+    postrotate
+        systemctl reload apache2
+    endscript
+}
+EOF
+
 # service
 install_dest /usr/lib/systemd/system/apache2.service <<'EOF'
 [Unit]
@@ -73,15 +89,16 @@ EOF
 # setup
 install_setup <<'EOF'
 # user
-groupadd -f apache2
-useradd -g apache2 -Md /var/empty/apache2 -s /usr/sbin/nologin apache2 || :
+groupadd -r -f apache2
+useradd -r -g apache2 -Md /var/empty/apache2 -s /usr/sbin/nologin apache2 || :
 
 # dir
-mkdir -p /etc/apache2
-install -vd -o apache2 -g apache2 /var/empty/apache2
+mkdir -p /etc/apache2 /var/empty/apache2
+install -dm 700 /var/log/apache2
 
 # etc
 ln -vsf ${dest}/usr/lib/apache2/modules /etc/apache2/
+ln -vsf {${dest},}/etc/logrotate.d/apache2
 
 # service
 ln -vsf {${dest},}/usr/lib/systemd/system/apache2.service

@@ -3,7 +3,7 @@
 pkg=(openssh-server openssh-client)
 bin=(/usr/sbin/sshd /usr/lib/openssh/{sshd-session,sshd-auth} /usr/bin/{ssh,scp,sftp,ssh-keygen})
 etc=(/etc/ssh/moduli)
-: "${pkg:?}" "${bin:?}" "${etc:?}"
+: "${pkg:?}" "${bin:?}" "${etc?}"
 
 # etc
 install_dest /etc/ssh/sshd_config <<'EOF'

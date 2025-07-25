@@ -3,7 +3,7 @@
 pkg=(bash curl less grep diffutils htop broot btop micro traceroute rsync netcat-openbsd)
 bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,btop,micro,traceroute,rsync,nc})
 etc=(/etc/ssl/certs/ca-certificates.crt)
-: "${pkg:?}" "${bin:?}" "${etc:?}"
+: "${pkg:?}" "${bin:?}" "${etc?}"
 
 # home
 install_dest home/bashrc <<'EOF'
@@ -34,6 +34,7 @@ alias l="ls -lA --time-style='+%Y-%m-%d %H:%M:%S'"
 alias h='history'
 alias br='broot -ds'
 alias lsport='lsof -i4 -i6 -nP | grep LISTEN'
+zless () { zcat "${@}" | less; }
 EOF
 install_dest home/inputrc <<'EOF'
 # 启用括号粘贴模式

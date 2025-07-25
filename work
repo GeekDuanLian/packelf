@@ -41,9 +41,9 @@ for i in "${workdir}"/*.sh; do
     # source
     install_setup () { install_setup_ "${name}"; }
     . "${i}"
-    : "${pkg:?}" "${bin:?}" "${etc:?}"
+    : "${pkg:?}" "${bin:?}" "${etc?}"
     # etc
-    cp -vLt ./ --parents -rn "${etc[@]}"
+    [[ "${etc}" ]] && cp -vLt ./ --parents -rn "${etc[@]}"
     # bin
     mkdir bin
     cp -vLt "${_}" "${bin[@]}"
