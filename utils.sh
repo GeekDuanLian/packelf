@@ -1,9 +1,9 @@
 #!/bin/false
 
+# shellcheck disable=SC2034
 pkg=(bash curl less grep diffutils htop broot btop micro traceroute rsync netcat-openbsd)
 bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,btop,micro,traceroute,rsync,nc})
 etc=(/etc/ssl/certs/ca-certificates.crt)
-: "${pkg:?}" "${bin:?}" "${etc?}"
 
 # home
 install_dest home/bashrc <<'EOF'

@@ -1,9 +1,10 @@
 #!/bin/false
 
+# shellcheck disable=SC2034
 pkg=(apache2)
 bin=(/usr/sbin/apache2)
 etc=(/usr/lib/apache2/modules)
-: "${pkg:?}" "${bin:?}" "${etc?}"
+ldd=("${etc[0]}"/*.so)
 
 # etc
 install_dest /etc/apache2/apache2.conf <<'EOF'
@@ -94,7 +95,7 @@ useradd -r -g apache2 -Md /var/empty/apache2 -s /usr/sbin/nologin apache2 || :
 
 # dir
 mkdir -p /etc/apache2 /var/empty/apache2
-install -dm 700 /var/log/apache2
+mkdir -m 700 /var/log/apache2
 
 # etc
 ln -vsf ${dest}/usr/lib/apache2/modules /etc/apache2/
