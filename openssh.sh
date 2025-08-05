@@ -16,8 +16,6 @@ AuthorizedKeysFile .ssh/authorized_keys
 UsePAM yes
 KbdInteractiveAuthentication no
 PermitRootLogin no
-MaxAuthTries 2
-LoginGraceTime 30s
 AllowTcpForwarding no
 AllowAgentForwarding no
 PrintMotd no
