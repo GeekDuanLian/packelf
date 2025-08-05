@@ -91,20 +91,20 @@ EOF
 
 # config
 # htop
-install_dest config/htop/htoprc 444 <<'EOF'
+install_dest home/config/htop/htoprc 444 <<'EOF'
 tree_view=1
 EOF
 # btop
-mkdir -pm711 config/btop/themes
-install_dest config/btop/btop.conf 444 <<'EOF'
+mkdir -pm711 home/config/btop/themes
+install_dest home/config/btop/btop.conf 444 <<'EOF'
 proc_gradient = False
 proc_filter_kernel = True
 proc_tree = True
 EOF
 # broot
-mkdir -pm711 config/broot/launcher
-install_dest config/broot/launcher/refused 444 </dev/null
-install_dest config/broot/conf.hjson 444 <<'EOF'
+mkdir -pm711 home/config/broot/launcher
+install_dest home/config/broot/launcher/refused 444 </dev/null
+install_dest home/config/broot/conf.hjson 444 <<'EOF'
 // 默认启动参数
 default_flags: -hip --sort-by-type-dirs-first
 // 内容搜索最大文件大小
@@ -166,9 +166,9 @@ verbs: [
 ]
 EOF
 # micro
-mkdir -pm711 config/micro/buffers
-mkdir -pm711 config/micro/backups
-install_dest config/micro/settings.json 444 <<'EOF'
+mkdir -pm711 home/config/micro/buffers
+mkdir -pm711 home/config/micro/backups
+install_dest home/config/micro/settings.json 444 <<'EOF'
 {
     "pluginchannels": [], // 不加载远程插件列表
     "savehistory": false, // 不保存历史命令
@@ -183,7 +183,7 @@ install_dest config/micro/settings.json 444 <<'EOF'
     "tabstospaces": true // Tab 键入空格
 }
 EOF
-install_dest config/micro/bindings.json 444 <<'EOF'
+install_dest home/config/micro/bindings.json 444 <<'EOF'
 {
     "CtrlLeft"   : "SelectLeft",
     "CtrlRight"  : "SelectRight",
@@ -210,5 +210,5 @@ install_setup <<'EOF'
 ln -vsf {${dest},}/etc/ssl/certs/ca-certificates.crt
 
 # chattr
-chattr +i -RV ${dest}/config/{htop,btop,broot,micro}
+chattr +i -RV ${dest}/home/config/{htop,btop,broot,micro}
 EOF
