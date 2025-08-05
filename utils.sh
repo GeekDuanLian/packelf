@@ -10,7 +10,7 @@ install_dest home/bashrc <<'EOF'
 # env
 PS1='\[\e]0;${AssetID:+${AssetID} }\H ${PWD}\a\]\[\e[1;33m\]\t \[\e[36m\]\H \[\e[35m\]${AssetID:+${AssetID} }\[\e[34m\]\w \[\e[0;91m\]${?#0}\[\e[0m\]\n\[\e[1;$(_ps1_c0)m\]\u \[\e[37m\]\$ \[\e[0m\]'
 _ps1_c0 () { [[ "${EUID}" == 0 ]] && { echo 31; return; }; echo 32; }
-export VISUAL='micro' EDITOR='micro'; alias e="${EDITOR}"
+export EDITOR='micro'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
 export LESSSECURE=1 LESSHISTFILE=- LESS='--no-init --RAW-CONTROL-CHARS --ignore-case --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
 
 # bash
@@ -91,16 +91,18 @@ EOF
 
 # config
 # htop
-install_dest config/htop/htoprc 444 </dev/null
+install_dest config/htop/htoprc 444 <<'EOF'
+tree_view=1
+EOF
 # btop
-install_dir  config/btop/themes 711
-install_dest config/btop/btop.conf <<'EOF'
+mkdir -pm711 config/btop/themes
+install_dest config/btop/btop.conf 444 <<'EOF'
 proc_gradient = False
 proc_filter_kernel = True
 proc_tree = True
 EOF
 # broot
-install_dir  config/broot/launcher 711
+mkdir -pm711 config/broot/launcher
 install_dest config/broot/launcher/refused 444 </dev/null
 install_dest config/broot/conf.hjson 444 <<'EOF'
 // 默认启动参数
@@ -164,8 +166,8 @@ verbs: [
 ]
 EOF
 # micro
-install_dir  config/micro/buffers 711
-install_dir  config/micro/backups 711
+mkdir -pm711 config/micro/buffers
+mkdir -pm711 config/micro/backups
 install_dest config/micro/settings.json 444 <<'EOF'
 {
     "pluginchannels": [], // 不加载远程插件列表

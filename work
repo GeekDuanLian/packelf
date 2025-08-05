@@ -17,10 +17,6 @@ install_dest () {
     [[ "${dst}" == /* ]] && dst="${dst:1}" # dst start with / but we need include it
     sed 's|\${dest}|'"${dest}"'|g' | install -vD"m${mode}" /dev/stdin "${dst}"
 }
-install_dir () {
-    local dst="${1:?}" mode="${2:-755}"
-    install -vd"m${mode}" "${dst}"
-}
 install_setup_ () { { cat <(
 cat <<'HEADER'
 #!/bin/bash

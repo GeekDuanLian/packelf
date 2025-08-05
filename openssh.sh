@@ -22,32 +22,16 @@ AllowTcpForwarding no
 AllowAgentForwarding no
 PrintMotd no
 EOF
+
+# pam.d
 install_dest /etc/pam.d/sshd <<'EOF'
-# @include common-auth
-auth        required        pam_faillock.so preauth  audit silent even_deny_root
-auth        [success=1 default=ignore] pam_unix.so nullok
-auth        [default=die]   pam_faillock.so authfail audit silent even_deny_root
-auth        sufficient      pam_faillock.so authsucc audit silent even_deny_root
-auth        requisite   pam_deny.so
-auth        required    pam_permit.so
-# end
+@include debian-common-auth
 account     required    pam_nologin.so
-# @include common-account
-account     [success=1 new_authtok_reqd=done default=ignore] pam_unix.so
-account     requisite   pam_deny.so
-account     required    pam_permit.so
-# end
+@include debian-common-account
 session     [success=ok ignore=ignore module_unknown=ignore default=bad] pam_selinux.so close
 session     required    pam_loginuid.so
 session     optional    pam_keyinit.so force revoke
-# @include common-session
-session     [default=1] pam_permit.so
-session     requisite   pam_deny.so
-session     required    pam_permit.so
-session     optional    pam_umask.so
-session     required    pam_unix.so
-session     optional    pam_systemd.so
-# end
+@include debian-common-session
 session     optional    pam_motd.so motd=/run/motd.dynamic
 session     optional    pam_motd.so noupdate
 session     optional    pam_mail.so standard noenv
@@ -55,11 +39,41 @@ session     required    pam_limits.so
 session     required    pam_env.so
 session     required    pam_env.so envfile=/etc/default/locale
 session     [success=ok ignore=ignore module_unknown=ignore default=bad] pam_selinux.so open
-# @include common-password
+@include debian-common-password
+EOF
+# other
+perl -pi -e 's/other/dbian/' /usr/lib/*-linux-gnu/libpam.so.0
+install_dest /etc/pam.d/dbian <<'EOF'
+@include debian-common-auth
+@include debian-common-account
+@include debian-common-password
+@include debian-common-session
+EOF
+install_dest /etc/pam.d/debian-common-auth <<'EOF'
+auth        required        pam_faillock.so preauth  audit silent even_deny_root
+auth        [success=1 default=ignore] pam_unix.so nullok
+auth        [default=die]   pam_faillock.so authfail audit silent even_deny_root
+auth        sufficient      pam_faillock.so authsucc audit silent even_deny_root
+auth        requisite   pam_deny.so
+auth        required    pam_permit.so
+EOF
+install_dest /etc/pam.d/debian-common-account <<'EOF'
+account     [success=1 new_authtok_reqd=done default=ignore] pam_unix.so
+account     requisite   pam_deny.so
+account     required    pam_permit.so
+EOF
+install_dest /etc/pam.d/debian-common-password <<'EOF'
 password    [success=1 default=ignore] pam_unix.so obscure yescrypt
 password    requisite   pam_deny.so
 password    required    pam_permit.so
-# end
+EOF
+install_dest /etc/pam.d/debian-common-session <<'EOF'
+session     [default=1] pam_permit.so
+session     requisite   pam_deny.so
+session     required    pam_permit.so
+session     optional    pam_umask.so
+session     required    pam_unix.so
+session     optional    pam_systemd.so
 EOF
 
 # service
@@ -94,7 +108,7 @@ ln -vsf ${dest}/usr/lib/*-linux-gnu/security /usr/lib/
 # etc
 rm -vf /etc/init.d/sshd
 ln -vsf {${dest},}/etc/ssh/moduli
-ln -vsf {${dest},}/etc/pam.d/sshd
+ln -vsf ${dest}/etc/pam.d/* /etc/pam.d/
 
 # service
 ln -vsf {${dest},}/usr/lib/systemd/system/sshd.service
