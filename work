@@ -47,7 +47,7 @@ for i in "${workdir}"/*.sh; do
     cp -vLt ./ "$( patchelf --print-interpreter /bin/bash )"
     ld="${_##*/}"
     # lib
-    mkdir lib
+    mkdir -p lib
     ldd bin/* "${ldd[@]}" | grep -oP '=>\s\K\S+' | sort | uniq | xargs -d '\n' cp -vLt "${_}"
     chmod -v 644 "${_}"/*
     # patchelf

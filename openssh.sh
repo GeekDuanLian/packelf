@@ -42,7 +42,7 @@ session     [success=ok ignore=ignore module_unknown=ignore default=bad] pam_sel
 @include debian-common-password
 EOF
 # other
-perl -pi -e 's/other/dbian/' /usr/lib/*-linux-gnu/libpam.so.0
+perl -pe 's/other/dbian/' /usr/lib/*-linux-gnu/libpam.so.0 | install_dest /lib/libpam.so.0-dbian
 install_dest /etc/pam.d/dbian <<'EOF'
 @include debian-common-auth
 @include debian-common-account
@@ -102,13 +102,18 @@ EOF
 
 # setup
 install_setup <<'EOF'
-# dir
-ln -vsf ${dest}/usr/lib/*-linux-gnu/security /usr/lib/
+if [[ ! -f /etc/deepin-version ]]; then
+    ln -vsf /usr/lib64/security /usr/lib/
+    rm ${dest}/lib/libpam.so.0-dbian
+else
+    ln -vsf ${dest}/usr/lib/*-linux-gnu/security /usr/lib/
+    ln -vsf ${dest}/etc/pam.d/* /etc/pam.d/
+    mv -v ${dest}/lib/libpam.so.0{-dbian,}
+fi
 
 # etc
 rm -vf /etc/init.d/sshd
 ln -vsf {${dest},}/etc/ssh/moduli
-ln -vsf ${dest}/etc/pam.d/* /etc/pam.d/
 
 # service
 ln -vsf {${dest},}/usr/lib/systemd/system/sshd.service
