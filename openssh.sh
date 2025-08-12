@@ -110,14 +110,15 @@ else
 fi
 
 # etc
-rm -vf /etc/init.d/sshd
 ln -vsf {${dest},}/etc/ssh/moduli
 
 # service
-ln -vsf {${dest},}/usr/lib/systemd/system/sshd.service
+service='sshd'
+systemctl stop    "${service}"
+systemctl disable "${service}"
+ln -vsf {${dest},}/usr/lib/systemd/system/"${service}".service; rm -vf /etc/init.d/sshd
 systemctl daemon-reload
-systemctl stop sshd || :
-systemctl start sshd
-systemctl enable sshd
-systemctl status sshd
+systemctl enable  "${service}"
+systemctl start   "${service}"
+systemctl status  "${service}"
 EOF

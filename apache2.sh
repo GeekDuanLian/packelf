@@ -95,17 +95,19 @@ useradd -r -g apache2 -Md /var/empty/apache2 -s /usr/sbin/nologin apache2 || :
 
 # dir
 mkdir -p /etc/apache2 /var/empty/apache2
-mkdir -m 700 /var/log/apache2
+mkdir -pm700 /var/log/apache2
 
 # etc
 ln -vsf ${dest}/usr/lib/apache2/modules /etc/apache2/
 ln -vsf {${dest},}/etc/logrotate.d/apache2
 
 # service
-ln -vsf {${dest},}/usr/lib/systemd/system/apache2.service
+service='apache2'
+systemctl stop    "${service}"
+systemctl disable "${service}"
+ln -vsf {${dest},}/usr/lib/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl stop apache2 || :
-systemctl start apache2
-systemctl enable apache2
-systemctl status apache2
+systemctl enable  "${service}"
+systemctl start   "${service}"
+systemctl status  "${service}"
 EOF
