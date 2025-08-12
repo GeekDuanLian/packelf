@@ -8,6 +8,8 @@ dest='/opt/debian-bin'
 # dir
 cd /result
 workdir='/workdir'
+# env
+export DEBIAN_FRONTEND='noninteractive'
 
 # https://packages.debian.org/index
 # postinst: /var/lib/dpkg/info/
