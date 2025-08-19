@@ -4,7 +4,7 @@ echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "
 trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
 
 # dest
-dest='/opt/debian-bin'
+dest='/opt/packelf'
 # dir
 cd /result
 workdir='/workdir'
