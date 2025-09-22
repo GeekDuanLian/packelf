@@ -8,10 +8,10 @@ etc=(/etc/ssl/certs/ca-certificates.crt)
 # home
 install_dest home/bashrc <<'EOF'
 # env
-PS1='\[\e]0;${AssetID:+${AssetID} }\H ${PWD}\a\]\[\e[1;33m\]\t \[\e[36m\]\H \[\e[35m\]${AssetID:+${AssetID} }\[\e[34m\]\w \[\e[0;91m\]${?#0}\[\e[0m\]\n\[\e[1;$(_ps1_c0)m\]\u \[\e[37m\]\$ \[\e[0m\]'
-_ps1_c0 () { [[ "${EUID}" == 0 ]] && { echo 31; return; }; echo 32; }
 export EDITOR='micro'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
-export LESSSECURE=1 LESSHISTFILE=- LESS='--no-init --RAW-CONTROL-CHARS --ignore-case --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
+export LESSSECURE=1 LESSHISTFILE=- LESS='--no-init --RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
+# done
+[[ "${-}" != *i* ]] && return
 
 # bash
 HISTSIZE='' HISTFILESIZE='' # 不限制历史记录数量
@@ -24,16 +24,20 @@ shopt -s extglob # 更多匹配操作符
 shopt -s globstar # ** 遍历操作符
 set +H # 禁用历史记录扩展
 
+# PS1
+[[ "${EUID}" == 0 ]] && : 31 || : 32
+PS1='\[\e]0;${AssetID:+${AssetID} }\H ${PWD}\a\]\[\e[1;33m\]\t \[\e[36m\]\H \[\e[35m\]${AssetID:+${AssetID} }\[\e[34m\]\w \[\e[0;91m\]${?#0}\[\e[0m\]\n\[\e[1;'"${_}"'m\]\u \[\e[37m\]\$ \[\e[0m\]'
+
 # color
 alias ls='ls -hF --color=auto'
 alias grep='grep --color=auto'
 alias diff='diff --color=auto -ur'
 
 # alias
-alias l="ls -lA --time-style='+%Y-%m-%d %H:%M:%S'"
+alias l="ls -la --time-style='+%Y-%m-%d %H:%M:%S'"
 alias h='history'
-alias br='broot -ds'
 alias lsport='lsof -i4 -i6 -nP | grep LISTEN'
+alias br='broot -ds'
 zless () { zcat "${@}" | less; }
 EOF
 install_dest home/inputrc <<'EOF'
