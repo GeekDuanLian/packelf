@@ -77,9 +77,9 @@ Environment="LANG=C"
 RuntimeDirectory=apache2
 RuntimeDirectoryMode=0755
 PrivateTmp=true
-ExecStartPre=${dest}/apache2 -t
-ExecStart=${dest}/apache2 -D FOREGROUND
-ExecReload=${dest}/apache2 -t
+ExecStartPre=${dest:?}/apache2 -t
+ExecStart=${dest:?}/apache2 -D FOREGROUND
+ExecReload=${dest:?}/apache2 -t
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 KillMode=mixed
 
@@ -98,14 +98,14 @@ mkdir -p /etc/apache2 /var/empty/apache2
 mkdir -pm700 /var/log/apache2
 
 # etc
-ln -vsf ${dest}/usr/lib/apache2/modules /etc/apache2/
-ln -vsf {${dest},}/etc/logrotate.d/apache2
+ln -vsf ${dest:?}/usr/lib/apache2/modules /etc/apache2/
+ln -vsf {${dest:?},}/etc/logrotate.d/apache2
 
 # service
 service='apache2'
 systemctl stop    "${service}"
 systemctl disable "${service}"
-ln -vsf {${dest},}/usr/lib/systemd/system/"${service}".service
+ln -vsf {${dest:?},}/usr/lib/systemd/system/"${service}".service
 systemctl daemon-reload
 systemctl enable  "${service}"
 systemctl start   "${service}"

@@ -211,8 +211,8 @@ EOF
 # setup
 install_setup <<'EOF'
 # etc
-ln -vsf {${dest},}/etc/ssl/certs/ca-certificates.crt
+ln -vsf {${dest:?},}/etc/ssl/certs/ca-certificates.crt
 
 # chattr
-chattr -RV +i ${dest}/home/config/{htop,btop,broot,micro}
+chattr -RV +i ${dest:?}/home/config/{htop,btop,broot,micro}
 EOF

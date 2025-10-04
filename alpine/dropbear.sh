@@ -25,7 +25,7 @@ cat >localoptions.h <<'EOF'
 #define IDENT_VERSION_PART ""
 
 // sftp-server path
-#define SFTPSERVER_PATH "${dest}/sftp-server"
+#define SFTPSERVER_PATH "${dest:?}/sftp-server"
 
 // verbose if needed
 #define DEBUG_TRACE 5
@@ -86,14 +86,14 @@ Description=dropbear
 After=network.target
 
 [Service]
-ExecStart=${dest}/dropbear -RFajkw
+ExecStart=${dest:?}/dropbear -RFajkw
 KillMode=process
 
 [Install]
 WantedBy=multi-user.target
 EOF
 # setup
-head -5 "${0}" | install -Dm755 /dev/stdin "${result}"/setup/dropbear.sh
+head -5 "${0}" | install -Dm755 /dev/null "${result}"/setup/dropbear.sh
 cat >>"${_}" <<'EOF'
 # etc
 mkdir -p /etc/dropbear
@@ -102,7 +102,7 @@ mkdir -p /etc/dropbear
 service='dropbear'
 systemctl stop    "${service}"
 systemctl disable "${service}"
-ln -vsf {${dest},}/usr/lib/systemd/system/"${service}".service
+ln -vsf {${dest:?},}/usr/lib/systemd/system/"${service}".service
 systemctl daemon-reload
 systemctl enable  "${service}"
 systemctl start   "${service}"

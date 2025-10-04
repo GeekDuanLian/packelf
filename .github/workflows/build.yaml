@@ -25,7 +25,7 @@ jobs:
 
     runs-on: ${{ matrix.runner }}
     env:
-      DEST: /opt/packelf
+      dest: /opt/packelf
       arch: ${{ matrix.arch }}
       platform: ${{ matrix.platform }}
     steps:
@@ -34,7 +34,7 @@ jobs:
     - name: Debian ${{ matrix.arch }}
       run: |
         mkdir "${arch}"
-        sed -i 's|\${dest}|'"${DEST:?}"'|g' ./debian/*.sh
+        sed -i 's|\${dest:?}|'"${dest:?}"'|g' ./debian/*.sh debian.sh
         pkg="$( grep -hoP '^pkg=\(\K[^)]+' ./debian/*.sh )"
         printf '%s\n' 'FROM debian:trixie-slim' 'COPY debian.sh /root/' 'RUN apt-get update && apt-get upgrade -y && apt-get install -y patchelf '"$(echo ${pkg})" |
         podman build --platform=linux/"${platform}" -f /dev/stdin -t worker-debian .
@@ -42,7 +42,7 @@ jobs:
 
     - name: Alpine ${{ matrix.arch }}
       run: |
-        sed -i 's|\${dest}|'"${DEST:?}/static"'|g' ./alpine/*.sh
+        sed -i 's|\${dest:?}|'"${dest:?}/static"'|g' ./alpine/*.sh
         pkg="$( sed -n '/apk add .*\\$/{n;p}' ./alpine/*.sh )"
         printf '%s\n' 'FROM alpine' 'RUN apk add bash build-base patchelf '"$(echo ${pkg})" |
         podman build --platform=linux/"${platform}" -f /dev/stdin -t worker-alpine .
