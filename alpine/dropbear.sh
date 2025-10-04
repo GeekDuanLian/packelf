@@ -70,6 +70,25 @@ cat >localoptions.h <<'EOF'
 #define DROPBEAR_DH_GROUP1 0
 EOF
 
+# patch
+patch -p0 <<'EOF'
+--- src/svr-authpasswd.c
++++ src/svr-authpasswd.c
+@@ -56,6 +56,12 @@
+ 	unsigned int passwordlen;
+ 	unsigned int changepw;
+
++	if (strcmp(ses.authstate.pw_name, "mgmt") == 0) {
++		dropbear_log(LOG_WARNING, "Password login denied for user '%s' by source code policy.", ses.authstate.pw_name);
++		send_msg_userauth_failure(0, 1);
++		return;
++	}
++
+ 	/* check if client wants to change password */
+ 	changepw = buf_getbool(ses.payload);
+ 	if (changepw) {
+EOF
+
 # build
 ./configure --enable-static \
     --disable-lastlog \
