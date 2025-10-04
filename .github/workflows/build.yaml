@@ -30,13 +30,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Build for ${{ matrix.arch }}
+    - name: Debian ${{ matrix.arch }}
       run: |
-        pkg="$( grep -h '^pkg=' ./*.sh | while read -r LINE; do : "${LINE:5}"; echo "${_::-1}"; done | tr '\n' ' ' )"
-        printf '%s\n' 'FROM debian:trixie-slim' 'RUN apt-get update && apt-get upgrade -y && apt-get install -y patchelf '"${pkg}" |
-        podman build --platform=linux/"${platform}" -f /dev/stdin -t worker .
         mkdir "${arch}"
-        podman run --volume=./"${arch}":/result --volume=./:/workdir --workdir=/workdir worker bash ./work
+        pkg="$( grep -hoP '^pkg=\(\K[^)]+' ./debian/*.sh )"
+        printf '%s\n' 'FROM debian:trixie-slim' 'RUN apt-get update && apt-get upgrade -y && apt-get install -y patchelf '"${pkg}" |
+        podman build --platform=linux/"${platform}" -f /dev/stdin -t worker-debian .
+        podman run --volume=./"${arch}":/result --volume=./debian:/workdir --workdir=/workdir -i worker-debian <debian.sh
+
+    - name: Alpine ${{ matrix.arch }}
+      run: |
+        pkg="$( sed -n '/apk add .*\\$/{n;p}' ./alpine/*.sh )"
+        printf '%s\n' 'FROM alpine' 'RUN apk add bash build-base patchelf '"${pkg}" |
+        podman build --platform=linux/"${platform}" -f /dev/stdin -t worker-alpine .
+        podman run --volume=./"${arch}":/result --volume=./alpine:/workdir --workdir=/workdir worker-alpine bash -c 'for i in ./*.sh; do "${i}"; done'
 
     - name: Release result
       env:

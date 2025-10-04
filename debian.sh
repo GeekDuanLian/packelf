@@ -6,8 +6,8 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # dest
 dest='/opt/packelf'
 # dir
-cd /result
 workdir='/workdir'
+cd /result
 # env
 export DEBIAN_FRONTEND='noninteractive'
 
