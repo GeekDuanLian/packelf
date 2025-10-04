@@ -6,6 +6,7 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/dropbear/APKBUILD
 
 # var
+script_header="$( head -4 "${0}" )"
 result='/result/static'
 pkgver=('2025.88' '71194f4792287b9e56e07cfa9a3e97d23b7fda82c858e0219d0d54aee48e77892997330ad1af5654a738b970965a92a79468bbf5c8ba0358b046fd053dfc87ed')
 
@@ -93,7 +94,8 @@ KillMode=process
 WantedBy=multi-user.target
 EOF
 # setup
-head -5 "${0}" | install -Dm755 /dev/null "${result}"/setup/dropbear.sh
+: "${result}"/setup/dropbear.sh
+{ echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${_}"
 cat >>"${_}" <<'EOF'
 # etc
 mkdir -p /etc/dropbear

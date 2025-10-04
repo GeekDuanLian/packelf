@@ -17,8 +17,8 @@ install_dest () {
     [[ "${dst}" == /* ]] && dst="${dst:1}" # dst start with / but we need include it
     install -vD"m${mode}" /dev/stdin "${dst}"
 }
-script_header="$( head -5 "${0}" )"
-_install_setup () { { echo "${script_header}"; cat; } | install_dest setup/"${1:?}.sh" 755; }
+script_header="$( head -4 "${0}" )"
+_install_setup () { { echo "${script_header}"; echo; cat; } | install_dest setup/"${1:?}.sh" 755; }
 
 # work
 for i in "${workdir}"/*.sh; do
