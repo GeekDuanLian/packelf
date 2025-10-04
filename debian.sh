@@ -4,7 +4,7 @@ echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "
 trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
 
 # dest
-dest='/opt/packelf'
+dest="${DEST:?}"
 # dir
 workdir='/workdir'
 cd /result
@@ -17,18 +17,10 @@ export DEBIAN_FRONTEND='noninteractive'
 install_dest () {
     local dst="${1:?}" mode="${2:-644}"
     [[ "${dst}" == /* ]] && dst="${dst:1}" # dst start with / but we need include it
-    sed 's|\${dest}|'"${dest}"'|g' | install -vD"m${mode}" /dev/stdin "${dst}"
+    install -vD"m${mode}" /dev/stdin "${dst}"
 }
-install_setup_ () { { cat <(
-cat <<'HEADER'
-#!/bin/bash
-set -eo pipefail
-echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "${r}"; }
-trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
-cd ${dest}
-
-HEADER
-) - | install_dest setup/"${1:?}.sh" 755; }; }
+script_header="$( head -5 "${0}" )"
+install_setup_ () { { echo "${script_header}"; cat; } | install_dest setup/"${1:?}.sh" 755; }
 
 # work
 for i in "${workdir}"/*.sh; do

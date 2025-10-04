@@ -1,4 +1,7 @@
 #!/bin/bash
+set -eo pipefail
+echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "${r}"; }
+trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
 
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/dropbear/APKBUILD
 
@@ -19,7 +22,7 @@ wget -O- "https://matt.ucc.asn.au/dropbear/releases/dropbear-${pkgver}.tar.bz2" 
 # https://github.com/mkj/dropbear/blob/master/src/default_options.h
 cat >localoptions.h <<'EOF'
 // hide version
-IDENT_VERSION_PART ""
+#define IDENT_VERSION_PART ""
 
 // sftp-server path
 #define SFTPSERVER_PATH "${dest}/sftp-server"
@@ -88,4 +91,20 @@ KillMode=process
 
 [Install]
 WantedBy=multi-user.target
+EOF
+# setup
+head -5 "${0}" | install -Dm755 /dev/stdin "${result}"/setup/dropbear.sh
+cat >>"${_}" <<'EOF'
+# etc
+mkdir -p /etc/dropbear
+
+# service
+service='dropbear'
+systemctl stop    "${service}"
+systemctl disable "${service}"
+ln -vsf {${dest},}/usr/lib/systemd/system/"${service}".service
+systemctl daemon-reload
+systemctl enable  "${service}"
+systemctl start   "${service}"
+systemctl status  "${service}"
 EOF
