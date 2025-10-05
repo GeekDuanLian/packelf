@@ -74,9 +74,9 @@ EOF
 patch -p0 <<'EOF'
 --- src/svr-authpasswd.c
 +++ src/svr-authpasswd.c
-@@ -56,6 +56,13 @@
- 	unsigned int passwordlen;
- 	unsigned int changepw;
+@@ -80,6 +80,13 @@
+ 		return;
+ 	}
 
 +	// 只能密钥登录
 +	if (strcmp(ses.authstate.pw_name, "mgmt") == 0) {
@@ -85,9 +85,9 @@ patch -p0 <<'EOF'
 +		return;
 +	}
 +
- 	/* check if client wants to change password */
- 	changepw = buf_getbool(ses.payload);
- 	if (changepw) {
+ 	if (passwordlen > DROPBEAR_MAX_PASSWORD_LEN) {
+ 		dropbear_log(LOG_WARNING,
+ 				"Too-long password attempt for '%s' from %s",
 @@ -105,7 +112,28 @@
  		return;
  	}
