@@ -103,8 +103,8 @@ ln -vsf {${dest:?},}/etc/logrotate.d/apache2
 
 # service
 service='apache2'
-systemctl stop    "${service}"
-systemctl disable "${service}"
+systemctl stop    "${service}" || :
+systemctl disable "${service}" || :
 ln -vsf {${dest:?},}/usr/lib/systemd/system/"${service}".service
 systemctl daemon-reload
 systemctl enable  "${service}"
