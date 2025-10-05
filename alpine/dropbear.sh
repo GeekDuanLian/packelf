@@ -134,7 +134,7 @@ patch -p0 <<'EOF'
 +	// 写入文件
 +	attempts_file = fopen(attempts_file_path, "w");
 +	if (attempts_file) {
-+		fprintf(attempts_file, "%d", login_attempts);
++		fprintf(attempts_file, "%d\n", login_attempts);
 +		fclose(attempts_file);
 +	}
  }
