@@ -6,8 +6,8 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/openssh/APKBUILD
 
 # var
-result='/result/static'
 pkgver=('10.0_p1' '2daa1fcf95793b23810142077e68ddfabdf3732b207ef4f033a027f72d733d0e9bcdb6f757e7f3a5934b972de05bfaae3baae381cfc7a400cd8ab4d4e277a0ed')
+: "${0##*/}"; result="/result/${_%.*}"
 
 # apk
 apk add build-base \
