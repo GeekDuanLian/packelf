@@ -74,10 +74,11 @@ EOF
 patch -p0 <<'EOF'
 --- src/svr-authpasswd.c
 +++ src/svr-authpasswd.c
-@@ -56,6 +56,12 @@
+@@ -56,6 +56,13 @@
  	unsigned int passwordlen;
  	unsigned int changepw;
 
++	// 只能密钥登录
 +	if (strcmp(ses.authstate.pw_name, "mgmt") == 0) {
 +		dropbear_log(LOG_WARNING, "Password login denied for user '%s' by source code policy.", ses.authstate.pw_name);
 +		send_msg_userauth_failure(0, 1);
@@ -87,6 +88,58 @@ patch -p0 <<'EOF'
  	/* check if client wants to change password */
  	changepw = buf_getbool(ses.payload);
  	if (changepw) {
+@@ -105,7 +112,28 @@
+ 		return;
+ 	}
+
++	// 初始化
++	int login_attempts = 0;
++	char attempts_file_path[256];
++	FILE *attempts_file = NULL;
++	snprintf(attempts_file_path, sizeof(attempts_file_path), "/var/run/dropbear/%s", ses.authstate.pw_name);
++	// 读取重试次数
++	attempts_file = fopen(attempts_file_path, "r");
++	if (attempts_file) {
++		if (fscanf(attempts_file, "%d", &login_attempts) != 1) { login_attempts = 0; }
++		fclose(attempts_file);
++	}
++	// 判断重试次数
++	if (login_attempts > 5) {
++		dropbear_log(LOG_WARNING, "Account '%s' locked due to too many failed attempts from %s", ses.authstate.pw_name, svr_ses.addrstring);
++		send_msg_userauth_failure(0, 1);
++		return;
++	}
++
+ 	if (constant_time_strcmp(testcrypt, passwdcrypt) == 0) {
++		// 密码正确，重置次数
++		login_attempts = 0;
++
+ 		if (svr_opts.multiauthmethod && (ses.authstate.authtypes & ~AUTH_TYPE_PASSWORD)) {
+ 			/* successful password authentication, but extra auth required */
+ 			dropbear_log(LOG_NOTICE,
+@@ -123,12 +151,22 @@
+ 			send_msg_userauth_success();
+ 		}
+ 	} else {
++		// 密码错误，增加次数
++		login_attempts++;
++
+ 		dropbear_log(LOG_WARNING,
+ 				"Bad password attempt for '%s' from %s",
+ 				ses.authstate.pw_name,
+ 				svr_ses.addrstring);
+ 		send_msg_userauth_failure(0, 1);
+ 	}
++
++	// 写入文件
++	attempts_file = fopen(attempts_file_path, "w");
++	if (attempts_file) {
++		fprintf(attempts_file, "%d", login_attempts);
++		fclose(attempts_file);
++	}
+ }
+
+ #endif
 EOF
 
 # build
@@ -117,7 +170,7 @@ EOF
 { echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${_}"
 cat >>"${_}" <<'EOF'
 # etc
-mkdir -p /etc/dropbear
+mkdir -p /etc/dropbear /var/run/dropbear
 
 # service
 service='dropbear'
