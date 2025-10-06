@@ -38,6 +38,8 @@ Description=tinyproxy
 After=network.target
 
 [Service]
+User=nobody
+Group=nobody
 ExecStart=${dest:?}/tinyproxy -d
 ExecReload=/bin/kill -USR1 $MAINPID
 KillMode=process
