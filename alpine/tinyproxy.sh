@@ -19,7 +19,7 @@ wget -O- "https://github.com/tinyproxy/tinyproxy/releases/download/$pkgver/tinyp
     tee >(tar -xz --strip 1) | sha512sum -c <(echo "${pkgver[1]} -")
 
 # build
-./configure LDFLAGS=-static \
+./configure LDFLAGS=-static --sysconfdir='/etc' \
     --enable-upstream \
     --disable-debug \
     --disable-xtinyproxy \
