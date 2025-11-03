@@ -184,7 +184,8 @@ install_dest home/config/micro/settings.json 444 <<'EOF'
     "hlsearch": true, // 高亮所有搜索匹配
     "hltrailingws": true, // 高亮尾随空格
     "diffgutter": true, // 提示已更改行
-    "tabstospaces": true // Tab 键入空格
+    "tabstospaces": true, // Tab 键入空格
+    "mkparents": true // 自动创建所需文件夹
 }
 EOF
 install_dest home/config/micro/bindings.json 444 <<'EOF'
