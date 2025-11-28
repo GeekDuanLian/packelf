@@ -67,7 +67,7 @@ install_dest /etc/logrotate.d/apache2 <<'EOF'
 EOF
 
 # service
-install_dest /usr/lib/systemd/system/apache2.service <<'EOF'
+install_dest /etc/systemd/system/apache2.service <<'EOF'
 [Unit]
 Description=apache2
 After=network.target remote-fs.target nss-lookup.target
@@ -105,7 +105,7 @@ ln -vsf {${dest:?},}/etc/logrotate.d/apache2
 service='apache2'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsf {${dest:?},}/usr/lib/systemd/system/"${service}".service
+ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
 systemctl enable  "${service}"
 systemctl start   "${service}"

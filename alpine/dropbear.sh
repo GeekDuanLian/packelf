@@ -153,7 +153,7 @@ make strip PROGRAMS=dropbear
 # bin
 install -Ds dropbear "${result}"/dropbear
 # service
-install -Dm644 /dev/stdin "${result}"/usr/lib/systemd/system/dropbear.service <<'EOF'
+install -Dm644 /dev/stdin "${result}"/etc/systemd/system/dropbear.service <<'EOF'
 [Unit]
 Description=dropbear
 After=network.target
@@ -176,7 +176,7 @@ mkdir -p /etc/dropbear /var/run/dropbear
 service='dropbear'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsf {${dest:?},}/usr/lib/systemd/system/"${service}".service
+ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
 systemctl enable  "${service}"
 systemctl start   "${service}"

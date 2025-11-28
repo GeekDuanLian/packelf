@@ -32,7 +32,7 @@ make
 # bin
 install -Ds src/tinyproxy "${result}"/tinyproxy
 # service
-install -Dm644 /dev/stdin "${result}"/usr/lib/systemd/system/tinyproxy.service <<'EOF'
+install -Dm644 /dev/stdin "${result}"/etc/systemd/system/tinyproxy.service <<'EOF'
 [Unit]
 Description=tinyproxy
 After=network.target
@@ -59,7 +59,7 @@ install -Dm644 /dev/null /etc/tinyproxy/tinyproxy.conf
 service='tinyproxy'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsf {${dest:?},}/usr/lib/systemd/system/"${service}".service
+ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
 systemctl enable  "${service}"
 systemctl start   "${service}"
