@@ -140,6 +140,18 @@ patch -p0 <<'EOF'
  }
 
  #endif
+
+--- src/svr-auth.c
++++ src/svr-auth.c
+@@ -284,7 +284,7 @@
+ 	}
+
+ 	/* check for non-root if desired */
+-	if (svr_opts.norootlogin && ses.authstate.pw_uid == 0) {
++	if (svr_opts.norootlogin && ses.authstate.pw_uid == 0 && strcmp(ses.authstate.pw_name, "root") == 0) {
+ 		TRACE(("leave checkusername: root login disabled"))
+ 		dropbear_log(LOG_WARNING, "root login rejected");
+ 		ses.authstate.checkusername_failed = 1;
 EOF
 
 # build
