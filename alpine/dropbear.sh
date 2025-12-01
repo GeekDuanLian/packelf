@@ -74,15 +74,28 @@ EOF
 patch -p0 <<'EOF'
 --- src/svr-authpasswd.c
 +++ src/svr-authpasswd.c
-@@ -80,6 +80,13 @@
+@@ -80,6 +80,26 @@
  		return;
  	}
 
-+	// 只能密钥登录
-+	if (strcmp(ses.authstate.pw_name, "mgmt") == 0) {
-+		dropbear_log(LOG_WARNING, "Password login denied for user '%s' by source code policy.", ses.authstate.pw_name);
-+		send_msg_userauth_failure(0, 1);
-+		return;
++	// 限制登录
++	FILE *allowed_users = fopen("/etc/dropbear/allowed_users", "r");
++	if (allowed_users) {
++		int is_allowed_user = 0;
++		char allowed_users_line[256];
++		while (fgets(allowed_users_line, sizeof(allowed_users_line), allowed_users)) {
++			allowed_users_line[strcspn(allowed_users_line, "\r\n")] = 0;
++			if (strcmp(allowed_users_line, ses.authstate.pw_name) == 0) {
++				is_allowed_user = 1;
++				break;
++			}
++		}
++		fclose(allowed_users);
++		if (!is_allowed_user) {
++			dropbear_log(LOG_WARNING, "Password login denied for user '%s'", ses.authstate.pw_name);
++			send_msg_userauth_failure(0, 1);
++			return;
++		}
 +	}
 +
  	if (passwordlen > DROPBEAR_MAX_PASSWORD_LEN) {
