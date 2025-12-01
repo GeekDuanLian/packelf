@@ -6,7 +6,7 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/tinyproxy/APKBUILD
 
 # var
-pkgver=('1.11.2' 'd7cdc3aa273881ca1bd3027ff83d1fa3d3f40424a3f665ea906a3de059df2795455b65aeebde0f75ae5cacf9bba57219bc0c468808a9a75278e93f8d7913bac5')
+pkgver=(1.11.2 d7cdc3aa273881ca1bd3027ff83d1fa3d3f40424a3f665ea906a3de059df2795455b65aeebde0f75ae5cacf9bba57219bc0c468808a9a75278e93f8d7913bac5)
 : "${0##*/}"; result="/result/${_%.*}"
 script_header="$( head -4 "${0}" )"
 

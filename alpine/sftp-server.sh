@@ -6,7 +6,7 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/openssh/APKBUILD
 
 # var
-pkgver=('10.0_p1' '2daa1fcf95793b23810142077e68ddfabdf3732b207ef4f033a027f72d733d0e9bcdb6f757e7f3a5934b972de05bfaae3baae381cfc7a400cd8ab4d4e277a0ed')
+pkgver=(10.2_p1 66f3dd646179e71aaf41c33b6f14a207dc873d71d24f11c130a89dee317ee45398b818e5b94887b5913240964a38630d7bca3e481e0f1eff2e41d9e1cfdbdfc5)
 : "${0##*/}"; result="/result/${_%.*}"
 
 # apk
@@ -15,7 +15,7 @@ apk add build-base \
 
 # src
 cd "$( mktemp -d )"
-wget -O- "https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${pkgver%_*}${pkgver#*_}.tar.gz" |
+wget -O- "https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${pkgver/_/}.tar.gz" |
     tee >(tar -xz --strip 1) | sha512sum -c <(echo "${pkgver[1]} -")
 
 # build
