@@ -92,7 +92,7 @@ patch -p0 <<'EOF'
 +		}
 +		fclose(allowed_users);
 +		if (!is_allowed_user) {
-+			dropbear_log(LOG_WARNING, "Password login denied for user '%s'", ses.authstate.pw_name);
++			dropbear_log(LOG_WARNING, "Password login denied for '%s' from %s", ses.authstate.pw_name, svr_ses.addrstring);
 +			send_msg_userauth_failure(0, 1);
 +			return;
 +		}
@@ -118,7 +118,7 @@ patch -p0 <<'EOF'
 +	}
 +	// 判断重试次数
 +	if (login_attempts > 5) {
-+		dropbear_log(LOG_WARNING, "Account '%s' locked due to too many failed attempts from %s", ses.authstate.pw_name, svr_ses.addrstring);
++		dropbear_log(LOG_WARNING, "User locked due to too many failed attempts for '%s' from %s", ses.authstate.pw_name, svr_ses.addrstring);
 +		send_msg_userauth_failure(0, 1);
 +		return;
 +	}
