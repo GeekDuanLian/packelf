@@ -11,7 +11,7 @@ install_dest home/bashrc <<'EOF'
 export EDITOR='micro'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
 export LESSSECURE=1 LESSHISTFILE=- LESS='--no-init --RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
 # done
-[[ "${-}" != *i* ]] && return
+[[ "${-}" == *i* ]] || return 0
 
 # bash
 HISTSIZE='' HISTFILESIZE='' # 不限制历史记录数量
@@ -26,7 +26,7 @@ set +H # 禁用历史记录扩展
 
 # PS1
 [[ "${EUID}" == 0 ]] && : 31 || : 32
-PS1='\[\e]0;${AssetID:+${AssetID} }\H ${PWD}\a\]\[\e[1;33m\]\t \[\e[36m\]\H \[\e[35m\]${AssetID:+${AssetID} }\[\e[34m\]\w \[\e[0;91m\]${?#0}\[\e[0m\]\n\[\e[1;'"${_}"'m\]\u \[\e[37m\]\$ \[\e[0m\]'
+PS1='\[\e]0;${AssetID:+${AssetID} }\H ${PWD}\a\]\[\e[1;33m\]\t \[\e[36m\]\H \[\e[35m\]${AssetID:+${AssetID} }\[\e[34m\]\w \[\e[0;91m\]${?#0}\[\e[0m\]\n\[\e[1;'"${_}"'m\]${USER} \[\e[37m\]\$ \[\e[0m\]'
 
 # color
 alias ls='ls -hF --color=auto'
