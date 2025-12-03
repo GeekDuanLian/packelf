@@ -37,14 +37,14 @@ jobs:
         pkg="$( grep -hoP '^pkg=\(\K[^)]+' ./debian/*.sh )"
         printf '%s\n' 'FROM debian:trixie-slim' 'COPY debian.sh /root/' 'RUN apt-get update && apt-get upgrade -y && apt-get install -y patchelf '"$(echo ${pkg})" |
         podman build --platform=linux/"${platform}" -f /dev/stdin -t worker-debian .
-        podman run --volume=./"${arch}":/result --volume=./debian:/workdir --workdir=/workdir -i worker-debian /root/debian.sh
+        podman run --volume=./"${arch}":/result --volume=./debian:/workdir --workdir=/workdir worker-debian /root/debian.sh
 
     - name: Alpine ${{ matrix.arch }}
       run: |
         pkg="$( sed -n '/apk add .*\\$/{n;p}' ./alpine/*.sh )"
         printf '%s\n' 'FROM alpine' 'RUN apk add bash build-base patchelf '"$(echo ${pkg})" |
         podman build --platform=linux/"${platform}" -f /dev/stdin -t worker-alpine .
-        podman run --volume=./"${arch}":/result --volume=./alpine:/workdir --workdir=/workdir worker-alpine bash -c 'for i in ./*.sh; do "${i}"; done'
+        podman run --volume=./"${arch}":/result --volume=./alpine:/workdir --workdir=/workdir worker-alpine bash -eo pipefail -c 'for i in ./*.sh; do "${i}"; done'
 
     - name: Release result
       env:
