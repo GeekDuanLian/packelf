@@ -49,9 +49,9 @@ PrivateDevices=yes
 WantedBy=multi-user.target
 EOF
 # setup
-: "${result}"/setup/tinyproxy.sh
-{ echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${_}"
-cat >>"${_}" <<'EOF'
+setup="${result}"/setup/tinyproxy.sh
+{ echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${setup}"
+cat >>"${setup}" <<'EOF'
 # etc
 install -Dm644 /dev/null /etc/tinyproxy/tinyproxy.conf
 

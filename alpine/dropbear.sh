@@ -167,6 +167,26 @@ patch -p0 <<'EOF'
  		ses.authstate.checkusername_failed = 1;
 EOF
 
+# log
+cat >"${result}"/etc/rsyslog.d/dropbear.conf <<'EOF'
+if $programname == 'dropbear' then /var/log/dropbear/dropbear.log
+EOF
+# logrotate
+cat >"${result}"/etc/logrotate.d/dropbear <<'EOF'
+/var/log/dropbear/dropbear.log {
+    monthly
+    rotate 6
+    compress
+    missingok
+    notifempty
+    dateext
+    dateformat -%Y-%m
+    postrotate
+        /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true
+    endscript
+}
+EOF
+
 # build
 ./configure --enable-static \
     --disable-lastlog \
@@ -191,11 +211,18 @@ KillMode=process
 WantedBy=multi-user.target
 EOF
 # setup
-: "${result}"/setup/dropbear.sh
-{ echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${_}"
-cat >>"${_}" <<'EOF'
+setup="${result}"/setup/dropbear.sh
+{ echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${setup}"
+cat >>"${setup}" <<'EOF'
 # etc
 mkdir -p /etc/dropbear /var/run/dropbear
+
+# log
+ln -vsf {${dest:?},}/etc/rsyslog.d/dropbear.conf
+systemctl restart rsyslog
+# logrotate
+ln -vsf {${dest:?},}/etc/logrotate.d/dropbear
+logrotate -d "${_}"
 
 # service
 service='dropbear'
