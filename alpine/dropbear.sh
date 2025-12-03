@@ -169,7 +169,9 @@ EOF
 
 # log
 install -Dm644 /dev/stdin "${result}"/etc/rsyslog.d/dropbear.conf <<'EOF'
-if $programname == 'dropbear' then /var/log/dropbear/dropbear.log
+$template DateFormat,"%timegenerated:::date-year%-%timegenerated:::date-month%-%timegenerated:::date-day% %timegenerated:::date-hour%:%timegenerated:::date-minute%:%timegenerated:::date-second% %hostname% %syslogtag% %msg%\n"
+if $programname == 'dropbear' then /var/log/dropbear/dropbear.log;DateFormat
+& stop
 EOF
 # logrotate
 install -Dm644 /dev/stdin "${result}"/etc/logrotate.d/dropbear <<'EOF'

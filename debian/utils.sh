@@ -9,7 +9,7 @@ etc=(/etc/ssl/certs/ca-certificates.crt)
 install_dest home/bashrc <<'EOF'
 # env
 export EDITOR='micro'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
-export LESSSECURE=1 LESSHISTFILE=- LESS='--no-init --RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
+export LESSSECURE=1 LESSHISTFILE=- LESS='--RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
 # done
 [[ "${-}" == *i* ]] || return 0
 
