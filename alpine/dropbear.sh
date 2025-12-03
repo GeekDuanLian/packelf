@@ -168,11 +168,11 @@ patch -p0 <<'EOF'
 EOF
 
 # log
-cat >"${result}"/etc/rsyslog.d/dropbear.conf <<'EOF'
+install -Dm644 /dev/stdin "${result}"/etc/rsyslog.d/dropbear.conf <<'EOF'
 if $programname == 'dropbear' then /var/log/dropbear/dropbear.log
 EOF
 # logrotate
-cat >"${result}"/etc/logrotate.d/dropbear <<'EOF'
+install -Dm644 /dev/stdin "${result}"/etc/logrotate.d/dropbear <<'EOF'
 /var/log/dropbear/dropbear.log {
     monthly
     rotate 6
