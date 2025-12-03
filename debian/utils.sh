@@ -34,6 +34,7 @@ alias grep='grep --color=auto'
 alias diff='diff --color=auto -ur'
 
 # alias
+alias ..='cd ..'
 alias l="ls -la --time-style='+%Y-%m-%d %H:%M:%S'"
 alias h='history'
 alias lsport='lsof -i4 -i6 -nP | grep LISTEN'
