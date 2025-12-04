@@ -78,7 +78,11 @@ setup="${result}"/setup/pure-ftpd.sh
 { echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${setup}"
 cat >>"${setup}" <<'EOF'
 # etc
-mkdir -p /etc/pure-ftpd
+install -dm700 /etc/pure-ftpd
+[[ "${1}" ]] && {
+    install -m600 "${1}".crt /etc/pure-ftpd/tls.crt
+    install -m600 "${1}".key /etc/pure-ftpd/tls.key
+}
 
 # service
 service='pure-ftpd'

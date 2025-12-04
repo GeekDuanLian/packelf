@@ -219,7 +219,8 @@ setup="${result}"/setup/dropbear.sh
 { echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${setup}"
 cat >>"${setup}" <<'EOF'
 # etc
-mkdir -p /etc/dropbear /var/run/dropbear
+install -dm711 /etc/dropbear
+install -dm700 /var/run/dropbear
 
 # log
 ln -vsf {${dest:?},}/etc/rsyslog.d/dropbear.conf
