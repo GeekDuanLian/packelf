@@ -30,7 +30,9 @@ wget -O- "https://github.com/tinyproxy/tinyproxy/releases/download/$pkgver/tinyp
 make
 
 # bin
-install -Ds src/tinyproxy "${result}"/tinyproxy
+for bin in tinyproxy; do
+    install -Ds src/"${bin}" "${result}/${bin}"
+done
 # service
 install -Dm644 /dev/stdin "${result}"/etc/systemd/system/tinyproxy.service <<'EOF'
 [Unit]

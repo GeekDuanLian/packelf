@@ -24,4 +24,6 @@ wget -O- "https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${pkgver/
 make sftp-server
 
 # bin
-install -Ds sftp-server "${result}"/sftp-server
+for bin in sftp-server; do
+    install -Ds "${bin}" "${result}/${bin}"
+done

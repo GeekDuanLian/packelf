@@ -198,7 +198,9 @@ EOF
 make strip PROGRAMS=dropbear
 
 # bin
-install -Ds dropbear "${result}"/dropbear
+for bin in dropbear; do
+    install -Ds "${bin}" "${result}/${bin}"
+done
 # service
 install -Dm644 /dev/stdin "${result}"/etc/systemd/system/dropbear.service <<'EOF'
 [Unit]
