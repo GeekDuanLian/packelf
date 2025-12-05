@@ -68,7 +68,7 @@ Description=pure-ftpd
 After=network.target
 
 [Service]
-ExecStart=${dest:?}/pure-ftpd -EAR4HS 990 -l puredb:/etc/pure-ftpd/passwd.pdb -Y3
+ExecStart=${dest:?}/pure-ftpd -EAR4HS 990 -p 30000:31000 -l puredb:/etc/pure-ftpd/passwd.pdb -Y3
 
 [Install]
 WantedBy=multi-user.target
