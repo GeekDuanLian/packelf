@@ -1,8 +1,8 @@
 #!/bin/false
 
 # shellcheck disable=SC2034
-pkg=(bash curl less grep diffutils htop broot btop micro traceroute rsync netcat-openbsd)
-bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,btop,micro,traceroute,rsync,nc})
+pkg=(bash curl less grep diffutils htop broot btop micro traceroute rsync netcat-openbsd iotop-c)
+bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,btop,micro,traceroute,rsync,nc} /usr/sbin/iotop)
 etc=(/etc/ssl/certs/ca-certificates.crt)
 
 # home
