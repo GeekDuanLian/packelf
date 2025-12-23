@@ -109,7 +109,7 @@ patch -p0 <<'EOF'
 +	int login_attempts = 0;
 +	char attempts_file_path[256];
 +	FILE *attempts_file = NULL;
-+	snprintf(attempts_file_path, sizeof(attempts_file_path), "/var/run/dropbear/%s", ses.authstate.pw_name);
++	snprintf(attempts_file_path, sizeof(attempts_file_path), "/run/dropbear/%s", ses.authstate.pw_name);
 +	// 读取重试次数
 +	attempts_file = fopen(attempts_file_path, "r");
 +	if (attempts_file) {
@@ -220,14 +220,13 @@ setup="${result}"/setup/dropbear.sh
 cat >>"${setup}" <<'EOF'
 # etc
 install -dm711 /etc/dropbear
-install -dm700 /var/run/dropbear
+install -dm700 /run/dropbear
 
 # log
 ln -vsf {${dest:?},}/etc/rsyslog.d/dropbear.conf
 systemctl restart rsyslog
 # logrotate
 ln -vsf {${dest:?},}/etc/logrotate.d/dropbear
-logrotate -d "${_}"
 
 # service
 service='dropbear'
@@ -239,3 +238,52 @@ systemctl enable  "${service}" || { ln -vsf /etc/systemd/system{,/multi-user.tar
 systemctl start   "${service}"
 systemctl status  "${service}"
 EOF
+
+# init.d if needed
+# shellcheck disable=SC2329
+init.d () {
+service sshd stop
+chkconfig sshd off
+install /dev/stdin /etc/init.d/dropbear <<'EOF'
+#!/bin/bash
+# chkconfig: 2345 55 25
+
+. /etc/rc.d/init.d/functions
+
+PROG='dropbear'
+OPTS='-Rajkw'
+EXEC="/opt/packelf/${PROG}"
+PIDFILE="/run/${PROG}.pid"
+LOCKFILE="/var/lock/subsys/${PROG}"
+
+start () {
+    echo -n "Starting ${PROG}: "
+    daemon "${EXEC}" "${OPTS}"
+    RETVAL=$?
+    [ "${RETVAL}" -eq 0 ] && touch "${LOCKFILE}"
+    echo
+    return "${RETVAL}"
+}
+
+stop () {
+    echo -n "Stopping ${PROG}: "
+    killproc -p "${PIDFILE}" "${PROG}"
+    RETVAL=$?
+    [ "${RETVAL}" -eq 0 ] && rm -f "${LOCKFILE}" "${PIDFILE}"
+    echo
+    return "${RETVAL}"
+}
+
+case "${1}" in
+    start   ) start;;
+    stop    ) stop;;
+    restart ) stop; start;;
+    status  ) status -p "${PIDFILE}" "${PROG}";;
+    * ) echo "Usage: ${0} {start|stop|restart|status}"; exit 1;;
+esac
+EOF
+chkconfig --add dropbear
+chkconfig dropbear on
+service dropbear start
+service dropbear status
+}; unset init.d
