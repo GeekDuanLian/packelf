@@ -11,8 +11,8 @@ install_dest /etc/apache2/apache2.conf <<'EOF'
 Listen 80
 User apache2
 Group apache2
-DefaultRuntimeDir /var/run/apache2
-PidFile /var/run/apache2/apache2.pid
+DefaultRuntimeDir /run/apache2
+PidFile /run/apache2/apache2.pid
 ErrorLog /var/log/apache2/server-error.log
 LogLevel warn
 LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
@@ -74,14 +74,27 @@ After=network.target remote-fs.target nss-lookup.target
 
 [Service]
 Environment="LANG=C"
+LimitNOFILE=infinity
 RuntimeDirectory=apache2
 RuntimeDirectoryMode=0755
+
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateDevices=true
 PrivateTmp=true
+ProtectHome=true
+
+Type=notify
 ExecStartPre=${dest:?}/apache2 -t
-ExecStart=${dest:?}/apache2 -D FOREGROUND
+ExecStart=${dest:?}/apache2 -k start -D FOREGROUND
 ExecReload=${dest:?}/apache2 -t
-ExecReload=/bin/kill -SIGUSR1 $MAINPID
+ExecReload=${dest:?}/apache2 -k graceful
 KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=5
+
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
@@ -90,15 +103,18 @@ EOF
 # setup
 install_setup <<'EOF'
 # user
-groupadd -r -f apache2
-useradd -r -g apache2 -Md /var/empty/apache2 -s /usr/sbin/nologin apache2 || :
+u='apache2'
+groupadd -r -f "${u}"
+id -u "${u}" &>/dev/null || useradd -r -g "${u}" -Md /var/empty/"${u}" -s /usr/sbin/nologin "${u}"
 
 # dir
-mkdir -p /etc/apache2 /var/empty/apache2
+mkdir -p /etc/apache2
 mkdir -pm700 /var/log/apache2
 
 # etc
 ln -vsf ${dest:?}/usr/lib/apache2/modules /etc/apache2/
+
+# logrotate
 ln -vsf {${dest:?},}/etc/logrotate.d/apache2
 
 # service
