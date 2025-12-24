@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034
 pkg=(nginx)
 bin=(/usr/sbin/nginx)
-etc=(/etc/mime.types)
+etc=(/etc/nginx/mime.types)
 
 # etc
 install_dest /etc/nginx/nginx.conf <<'EOF'
@@ -78,7 +78,7 @@ install_dest /etc/logrotate.d/nginx <<'EOF'
 EOF
 
 # service
-install_dest /usr/lib/systemd/system/nginx.service <<'EOF'
+install_dest /etc/systemd/system/nginx.service <<'EOF'
 [Unit]
 Description=nginx
 After=network.target remote-fs.target nss-lookup.target
@@ -95,7 +95,6 @@ PrivateDevices=true
 PrivateTmp=true
 ProtectHome=true
 
-Type=simple
 ExecStartPre=${dest:?}/nginx -tq
 ExecStart=${dest:?}/nginx -g 'daemon off;'
 ExecReload=${dest:?}/nginx -tq
@@ -120,10 +119,11 @@ id -u "${u}" &>/dev/null || useradd -r -g "${u}" -Md /var/empty/"${u}" -s /usr/s
 
 # dir
 mkdir -p /etc/nginx
-mkdir -pm700 /var/log/nginx
+mkdir -pm700 /var/log/nginx /var/empty/nginx
 
 # etc
-ln -vsf
+ln -vsf ${dest:?}/etc/nginx/mime.types /etc/nginx/
+[[ "${1}" ]] && install -m644 "${1}" /etc/nginx/nginx.conf
 
 # logrotate
 ln -vsf {${dest:?},}/etc/logrotate.d/nginx

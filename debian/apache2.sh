@@ -84,7 +84,6 @@ PrivateDevices=true
 PrivateTmp=true
 ProtectHome=true
 
-Type=notify
 ExecStartPre=${dest:?}/apache2 -t
 ExecStart=${dest:?}/apache2 -k start -D FOREGROUND
 ExecReload=${dest:?}/apache2 -t
@@ -109,10 +108,11 @@ id -u "${u}" &>/dev/null || useradd -r -g "${u}" -Md /var/empty/"${u}" -s /usr/s
 
 # dir
 mkdir -p /etc/apache2
-mkdir -pm700 /var/log/apache2
+mkdir -pm700 /var/log/apache2 /var/empty/apache2
 
 # etc
 ln -vsf ${dest:?}/usr/lib/apache2/modules /etc/apache2/
+[[ "${1}" ]] && install -m644 "${1}" /etc/apache2/apache2.conf
 
 # logrotate
 ln -vsf {${dest:?},}/etc/logrotate.d/apache2
