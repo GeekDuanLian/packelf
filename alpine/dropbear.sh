@@ -25,6 +25,9 @@ cat >localoptions.h <<'EOF'
 // hide version
 #define IDENT_VERSION_PART ""
 
+// pid file
+#define DROPBEAR_PIDFILE "/run/dropbear.pid"
+
 // sftp-server path
 #define SFTPSERVER_PATH "${dest:?}/sftp-server"
 
