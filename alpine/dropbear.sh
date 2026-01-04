@@ -6,7 +6,7 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/dropbear/APKBUILD
 
 # var
-pkgver=(2025.88 71194f4792287b9e56e07cfa9a3e97d23b7fda82c858e0219d0d54aee48e77892997330ad1af5654a738b970965a92a79468bbf5c8ba0358b046fd053dfc87ed)
+pkgver=(2025.89 5420b0c6de08c2e796abe9d0819ce322e244a0d9670678dc750aa07da8426a782b7f8685fa65c8fe053fc5ae0118cc5f31fe7b60d817e6c57000a189f2c97176)
 : "${0##*/}"; result="/result/${_%.*}"
 script_header="$( head -4 "${0}" )"
 
@@ -68,7 +68,7 @@ cat >localoptions.h <<'EOF'
 #define DROPBEAR_DH_GROUP16 0
 #define DROPBEAR_CURVE25519 1
 #define DROPBEAR_SNTRUP761 0
-#define DROPBEAR_MLKEM768 0
+#define DROPBEAR_MLKEM768 1
 #define DROPBEAR_ECDH 1
 #define DROPBEAR_DH_GROUP1 0
 EOF
