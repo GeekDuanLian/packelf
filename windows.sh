@@ -9,8 +9,10 @@ pkgver=(2025.89 5420b0c6de08c2e796abe9d0819ce322e244a0d9670678dc750aa07da8426a78
 
 # cygwin
 packages='gcc-core,make,zlib-devel,libcrypt-devel'
-# curl -fsSL -o 'setup.exe' 'https://cygwin.org/setup-x86_64.exe'
-# ./setup.exe --no-admin --quiet-mode --no-shortcuts --no-startmenu --no-desktop --root 'D:\cygwin64' --only-site --site 'http://mirrors.kernel.org/sourceware/cygwin/' --packages "${packages}"
+# current
+curl -fsSL -o 'setup.exe' 'https://cygwin.org/setup-x86_64.exe'
+./setup.exe --no-admin --quiet-mode --no-shortcuts --no-startmenu --no-desktop --root 'D:\cygwin64' --only-site --site 'http://mirrors.kernel.org/sourceware/cygwin/' --packages "${packages}"
+# xp
 curl -fsSL -o 'setup_xp.exe' 'http://ctm.crouchingtigerhiddenfruitbat.org/pub/cygwin/setup/snapshots/setup-x86_64-2.874.exe'
 ./setup_xp.exe --no-admin --quiet-mode --no-shortcuts --no-startmenu --no-desktop --root 'D:\cygwin64_xp' --no-verify --only-site --site 'http://ctm.crouchingtigerhiddenfruitbat.org/pub/cygwin/circa/64bit/2016/08/30/104235' --packages "${packages}"
 
@@ -78,7 +80,22 @@ cat >localoptions.h <<'EOF'
 #define DROPBEAR_DH_GROUP1 0
 EOF
 
+# xp
+xp="$( mktemp -d )"
+cp -a . "${xp}"/
+
 # build
+'D:\cygwin64\bin\bash.exe' --noprofile --norc -euo pipefail <<'EOF'
+export PATH='/bin'
+./configure \
+    --disable-lastlog \
+    --disable-utmp --disable-utmpx \
+    --disable-wtmp --disable-wtmpx \
+    --disable-pututline --disable-pututxline
+make strip PROGRAMS=dropbear
+EOF
+# xp
+cd "${xp}"
 'D:\cygwin64_xp\bin\bash.exe' --noprofile --norc -euo pipefail <<'EOF'
 export PATH='/bin'
 ./configure CFLAGS="-fno-stack-protector" \
