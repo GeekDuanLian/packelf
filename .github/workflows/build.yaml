@@ -24,10 +24,12 @@ jobs:
             runner: ubuntu-24.04-arm
 
     runs-on: ${{ matrix.runner }}
+
     env:
       dest: /opt/packelf
       arch: ${{ matrix.arch }}
       platform: ${{ matrix.platform }}
+
     steps:
     - uses: actions/checkout@v4
 

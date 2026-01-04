@@ -1,0 +1,18 @@
+# Secrets:
+# RELEASE_TOKEN = write permission token
+
+name: build-windows
+
+on:
+  workflow_dispatch:
+  push: { branches: [ main ] }
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults: { run: { shell: 'bash --noprofile --norc -euo pipefail {0}' } }
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: build
+        run: ./windows.sh
