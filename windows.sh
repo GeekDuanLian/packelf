@@ -22,6 +22,9 @@ curl -fsSL "https://matt.ucc.asn.au/dropbear/releases/dropbear-${pkgver}.tar.bz2
 # cfg
 # https://github.com/mkj/dropbear/blob/master/src/default_options.h
 cat >localoptions.h <<'EOF'
+// don't support setresgid()
+#define DROPBEAR_SVR_DROP_PRIVS 0
+
 // hide version
 #define IDENT_VERSION_PART ""
 
@@ -39,6 +42,8 @@ cat >localoptions.h <<'EOF'
 
 // no agent forwarding
 #define DROPBEAR_SVR_AGENTFWD 0
+// no unix forwarding
+#define DROPBEAR_SVR_LOCALSTREAMFWD 0
 
 // not use inetd
 #define INETD_MODE 0

@@ -39,6 +39,8 @@ cat >localoptions.h <<'EOF'
 
 // no agent forwarding
 #define DROPBEAR_SVR_AGENTFWD 0
+// no unix forwarding
+#define DROPBEAR_SVR_LOCALSTREAMFWD 0
 
 // not use inetd
 #define INETD_MODE 0
