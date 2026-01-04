@@ -14,5 +14,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: build
+
+      - name: Build
         run: ./windows.sh
+
+      - name: Release result
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          result='dropbear-windows.zip'
+          ! gh release view result &>/dev/null &&
+          gh release create result "${result}" -n 'download here' ||
+          gh release upload result "${result}" --clobber

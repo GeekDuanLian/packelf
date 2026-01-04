@@ -81,11 +81,12 @@ cat >localoptions.h <<'EOF'
 EOF
 
 # xp
+current="${PWD}"
 xp="$( mktemp -d )"
 cp -a . "${xp}"/
 
 # build
-'D:\cygwin64\bin\bash.exe' --noprofile --norc -euo pipefail <<'EOF'
+/d/cygwin64/bin/bash.exe --noprofile --norc -euo pipefail <<'EOF'
 export PATH='/bin'
 ./configure \
     --disable-lastlog \
@@ -96,7 +97,7 @@ make strip PROGRAMS=dropbear
 EOF
 # xp
 cd "${xp}"
-'D:\cygwin64_xp\bin\bash.exe' --noprofile --norc -euo pipefail <<'EOF'
+/d/cygwin64_xp/bin/bash.exe --noprofile --norc -euo pipefail <<'EOF'
 export PATH='/bin'
 ./configure CFLAGS="-fno-stack-protector" \
     --disable-lastlog \
@@ -105,6 +106,13 @@ export PATH='/bin'
     --disable-pututline --disable-pututxline
 make strip PROGRAMS=dropbear
 EOF
+
+# bin
+cd "${GITHUB_WORKSPACE}"
+mkdir -p dropbear-windows/{current,xp}
+cp "${current}"/dropbear.exe    /d/cygwin64/bin/{cygwin1,cygcrypt-2,cygz,cyggcc_s-seh-1}.dll dropbear-windows/current/
+cp      "${xp}"/dropbear.exe /d/cygwin64_xp/bin/{cygwin1,cygcrypt-0,cygz,cyggcc_s-seh-1}.dll dropbear-windows/xp/
+7z a -tzip dropbear-windows.zip dropbear-windows
 
 # done
 true
