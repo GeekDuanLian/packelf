@@ -106,8 +106,24 @@ EOF
 # bottom
 install_dest home/config/bottom/bottom.toml 444 <<'EOF'
 [flags]
-basic = true
 tree = true
+process_memory_as_value = true
+process_command = true
+hide_k_threads = true
+[styles]
+theme = "nord"
+[[row]]
+    [[row.child]]
+    type = "mem"
+    [[row.child]]
+    type = "cpu"
+    [[row.child]]
+    type = "net"
+[[row]]
+    ratio = 2
+    [[row.child]]
+    type = "proc"
+    default = true
 EOF
 # broot
 mkdir -pm711 home/config/broot/launcher
@@ -212,6 +228,8 @@ install_dest home/config/micro/bindings.json 444 <<'EOF'
     "Ctrl-d": "Quit"
 }
 EOF
+# iotop
+mkdir -pm711 home/config/iotop
 
 # setup
 install_setup <<'EOF'
@@ -219,5 +237,5 @@ install_setup <<'EOF'
 ln -vsf {${dest:?},}/etc/ssl/certs/ca-certificates.crt
 
 # chattr
-chattr -RV +i ${dest:?}/home/config/{htop,bottom,broot,micro}
+chattr -RV +i ${dest:?}/home/config/{htop,bottom,broot,micro,iotop}
 EOF
