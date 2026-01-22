@@ -8,6 +8,12 @@ workdir='/workdir'
 cd /result
 # env
 export DEBIAN_FRONTEND='noninteractive'
+# var
+case "$( dpkg --print-architecture )" in
+    i386  ) : i686;;
+    amd64 ) : x86_64;;
+    arm64 ) : aarch64;;
+esac; arch="${_}"
 
 # https://packages.debian.org/index
 # postinst: /var/lib/dpkg/info/
@@ -28,7 +34,7 @@ for i in "${workdir}"/*.sh; do
     cd "${name}"
     # source
     install_setup () { _install_setup "${name}"; }
-    declare bin ldd; unset pkg bin etc ldd;
+    unset pkg bin etc ldd; : "${bin+} ${ldd+} ${arch+}"
     . "${i}"
     # etc
     [[ "${etc}" ]] && cp -vLt ./ --parents -rn "${etc[@]}"

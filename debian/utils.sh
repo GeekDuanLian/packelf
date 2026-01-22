@@ -6,7 +6,7 @@ bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,micro,traceroute,rsync,nc,btm
 etc=(/etc/ssl/certs/ca-certificates.crt)
 
 # bottom
-curl -fsSL 'https://github.com/ClementTsang/bottom/releases/latest/download/'"bottom_$(arch)-unknown-linux-gnu.tar.gz" |
+curl -fsSL 'https://github.com/ClementTsang/bottom/releases/latest/download/'"bottom_${arch:?}-unknown-linux-gnu.tar.gz" |
 tar -xzO btm | install /dev/stdin /usr/bin/btm
 
 # home
