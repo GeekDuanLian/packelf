@@ -1,9 +1,13 @@
 #!/bin/false
 
 # shellcheck disable=SC2034
-pkg=(bash curl less grep diffutils htop broot btop micro traceroute rsync netcat-openbsd iotop-c)
-bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,btop,micro,traceroute,rsync,nc} /usr/sbin/iotop)
+pkg=(bash curl less grep diffutils htop broot micro traceroute rsync netcat-openbsd iotop-c)
+bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,micro,traceroute,rsync,nc,btm} /usr/sbin/iotop)
 etc=(/etc/ssl/certs/ca-certificates.crt)
+
+# bottom
+curl -fsSL 'https://github.com/ClementTsang/bottom/releases/latest/download/'"bottom_$(arch)-unknown-linux-gnu.tar.gz" |
+tar -xzO btm | install /dev/stdin /usr/bin/btm
 
 # home
 install_dest home/bashrc <<'EOF'
@@ -99,12 +103,11 @@ EOF
 install_dest home/config/htop/htoprc 444 <<'EOF'
 tree_view=1
 EOF
-# btop
-mkdir -pm711 home/config/btop/themes
-install_dest home/config/btop/btop.conf 444 <<'EOF'
-proc_gradient = False
-proc_filter_kernel = True
-proc_tree = True
+# bottom
+install_dest home/config/bottom/bottom.toml 444 <<'EOF'
+[flags]
+basic = true
+tree = true
 EOF
 # broot
 mkdir -pm711 home/config/broot/launcher
@@ -216,5 +219,5 @@ install_setup <<'EOF'
 ln -vsf {${dest:?},}/etc/ssl/certs/ca-certificates.crt
 
 # chattr
-chattr -RV +i ${dest:?}/home/config/{htop,btop,broot,micro}
+chattr -RV +i ${dest:?}/home/config/{htop,bottom,broot,micro}
 EOF
