@@ -213,7 +213,7 @@ Description=dropbear
 After=network.target
 
 [Service]
-ExecStart=${dest:?}/dropbear -RFajkw
+ExecStart=${dest:?}/dropbear -RFajk
 KillMode=process
 
 [Install]
