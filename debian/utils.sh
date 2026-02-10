@@ -1,8 +1,8 @@
 #!/bin/false
 
 # shellcheck disable=SC2034
-pkg=(bash curl less grep diffutils htop broot micro traceroute rsync netcat-openbsd iotop-c)
-bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,micro,traceroute,rsync,nc,btm} /usr/sbin/iotop)
+pkg=(bash curl less grep diffutils htop broot micro traceroute rsync netcat-openbsd)
+bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,micro,traceroute,rsync,nc,btm})
 etc=(/etc/ssl/certs/ca-certificates.crt)
 
 # bottom
@@ -106,7 +106,6 @@ EOF
 # bottom
 install_dest home/config/bottom/bottom.toml 444 <<'EOF'
 [flags]
-tree = true
 process_memory_as_value = true
 process_command = true
 hide_k_threads = true
@@ -228,8 +227,6 @@ install_dest home/config/micro/bindings.json 444 <<'EOF'
     "Ctrl-d": "Quit"
 }
 EOF
-# iotop
-mkdir -pm711 home/config/iotop
 
 # setup
 install_setup <<'EOF'
@@ -237,5 +234,5 @@ install_setup <<'EOF'
 ln -vsf {${dest:?},}/etc/ssl/certs/ca-certificates.crt
 
 # chattr
-chattr -RV +i ${dest:?}/home/config/{htop,bottom,broot,micro,iotop}
+chattr -RV +i ${dest:?}/home/config/*
 EOF
