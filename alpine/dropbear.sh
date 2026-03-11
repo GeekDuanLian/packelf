@@ -37,8 +37,6 @@ cat >localoptions.h <<'EOF'
 // not need motd
 #define DO_MOTD 0
 
-// no agent forwarding
-#define DROPBEAR_SVR_AGENTFWD 0
 // no unix forwarding
 #define DROPBEAR_SVR_LOCALSTREAMFWD 0
 

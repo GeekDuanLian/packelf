@@ -128,63 +128,76 @@ EOF
 mkdir -pm711 home/config/broot/launcher
 install_dest home/config/broot/launcher/refused 444 </dev/null
 install_dest home/config/broot/conf.hjson 444 <<'EOF'
-// 默认启动参数
 default_flags: -hip --sort-by-type-dirs-first
-// 内容搜索最大文件大小
-content_search_max_file_size: 10MB
-// 日期格式
 date_time_format: %Y-%m-%d %H:%M:%S
-// 使用三角标记聚焦行
-show_selection_mark: true
-// 快捷键
+icon_theme: nerdfont
 verbs: [
     {
-        key: Home
+        key: "home"
         execution: ":select_first"
     }
     {
-        key: End
+        key: "end"
         execution: ":select_last"
     }
     {
-        key: Ctrl-Down
-        execution: ":back"
-    }
-    {
-        key: Ctrl-d
+        key: "ctrl-d"
         execution: ":quit"
     }
     {
-        key: Ctrl-x
-        execution: ":quit"
-    }
-    {
-        key: Ctrl-e
+        key: "ctrl-e"
         execution: ":toggle_tree"
     }
     {
-        key: F4
+        key: "ctrl-s"
         execution: ":toggle_stage"
     }
     {
-        key: Ctrl-b
-        shortcut: b
-        invocation: bash
-        execution: "bash"
+        key: "ctrl-g"
+        execution: ":toggle_staging_area"
+    }
+    {
+        invocation: "cd {path}"
+        execution: ":focus {path}"
+    }
+    {
+        key: "F2"
+        invocation: "mv {new_filename:file-name}"
+        execution: "mv {file} {parent}/{new_filename}"
+        leave_broot: false
+        auto_exec: false
+    }
+    {
+        key: "F3"
+        invocation: "cp {new_filename:file-name}"
+        execution: "cp {file} {parent}/{new_filename}"
+        leave_broot: false
+        auto_exec: false
+    }
+    {
+        invocation: "run {exec}"
+        execution: "{exec} {file}"
         set_working_dir: true
         leave_broot: false
     }
     {
-        shortcut: e
-        invocation: edit
-        execution: "micro +{line} {file}"
-        apply_to: file
+        shortcut: "s";
+        invocation: "bash";
+        execution: "bash";
+        set_working_dir: true;
+        leave_broot: false;
+    }
+    {
+        shortcut: "e"
+        invocation: "edit"
+        execution: "$EDITOR +{line} {file}"
+        apply_to: "file"
         leave_broot: false
     }
     {
-        key: enter
+        key: "enter"
         execution: ":edit"
-        apply_to: text_file
+        apply_to: "text_file"
     }
 ]
 EOF
