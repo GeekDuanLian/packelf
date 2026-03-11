@@ -1,8 +1,8 @@
 #!/bin/false
 
 # shellcheck disable=SC2034
-pkg=(bash curl less grep diffutils htop broot micro traceroute rsync netcat-openbsd)
-bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,micro,traceroute,rsync,nc,btm})
+pkg=(bash curl less grep diffutils htop broot micro traceroute rsync netcat-openbsd smartmontools)
+bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,micro,traceroute,rsync,nc,btm} /usr/sbin/smartctl)
 etc=(/etc/ssl/certs/ca-certificates.crt)
 
 # bottom
