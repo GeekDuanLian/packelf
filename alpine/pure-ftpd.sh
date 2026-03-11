@@ -6,7 +6,7 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/community/pure-ftpd/APKBUILD
 
 # var
-pkgver=(1.0.52 d3aa87e0e9beca464f5dc23ea86835ba42a8bb57120e8c0a4cd975925aed850a442766c1ef605e563d6c61a37967b4f283ababb991493327ce6f0a1749aae01a)
+pkgver=(1.0.53 cdab1feab9e046720ceaac27c7718e970411705dcaf4254a23878c777eb2171de2f5a59223c74f4389c58e755c1aded598cb73053a340dc3a32692c6ca04dcfe)
 : "${0##*/}"; result="/result/${_%.*}"
 script_header="$( head -4 "${0}" )"
 
