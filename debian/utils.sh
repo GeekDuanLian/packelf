@@ -42,14 +42,11 @@ alias ..='cd ..'
 alias l="ls -la --time-style='+%Y-%m-%d %H:%M:%S'"
 alias h='history'
 alias lsport='lsof -i4 -i6 -nP | grep LISTEN'
-alias br='broot -ds'
 zless () { zcat "${@}" | less; }
 EOF
 install_dest home/inputrc <<'EOF'
 # 启用括号粘贴模式
 set enable-bracketed-paste on
-# 不要响铃而是显示视觉效果
-set bell-style visible
 # 立即显示补全
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
@@ -181,11 +178,11 @@ verbs: [
         leave_broot: false
     }
     {
-        shortcut: "s";
-        invocation: "bash";
-        execution: "bash";
-        set_working_dir: true;
-        leave_broot: false;
+        shortcut: "s"
+        invocation: "bash"
+        execution: "bash"
+        set_working_dir: true
+        leave_broot: false
     }
     {
         shortcut: "e"
