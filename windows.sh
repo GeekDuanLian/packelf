@@ -2,7 +2,6 @@
 set -eo pipefail
 echoerr () { echo "${@}" >&2; }; die () { local r="${?}"; echoerr "${@}"; exit "${r}"; }
 trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m"' ERR
-shopt -s extglob globstar nocaseglob dotglob failglob
 
 # var
 pkgver=(2025.89 5420b0c6de08c2e796abe9d0819ce322e244a0d9670678dc750aa07da8426a782b7f8685fa65c8fe053fc5ae0118cc5f31fe7b60d817e6c57000a189f2c97176)

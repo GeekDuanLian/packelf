@@ -69,40 +69,39 @@ set colored-completion-prefix on
 # 历史记录保存光标位置
 set history-preserve-point on
 
-# Esc,Esc 删除全部内容
+# esc,esc 删除全部内容
 "\e\e": kill-whole-line
-# Ctrl+左 光标向前移动一个单词
+# ctrl+左 光标向前移动一个单词
 "\e[1;5D": backward-word
-# Ctrl+右 光标向后移动一个单词
+# ctrl+右 光标向后移动一个单词
 "\e[1;5C": forward-word
-# PgUp 光标向前移动一个单词
+# cmd+左 光标向前移动一个单词
+"\e[1;9D": backward-word
+# cmd+右 光标向后移动一个单词
+"\e[1;9C": forward-word
+# pgup 光标向前移动一个单词
 "\e[5~": backward-word
-# PgDn 光标向后移动一个单词
+# pgdn 光标向后移动一个单词
 "\e[6~": forward-word
-# Ctrl+上 根据已有输入向前查找历史记录
+# ctrl+上 根据已有输入向前查找历史记录
 "\e[1;5A": history-search-backward
-# Ctrl+下 根据已有输入向后查找历史记录
+# ctrl+下 根据已有输入向后查找历史记录
 "\e[1;5B": history-search-forward
-# Ctrl+Backspace 删除前一个单词
+# ctrl+backspace 删除前一个单词
 "\e[3;5~": kill-word
-# Ctrl+Delete 删除后一个单词
+# ctrl+delete 删除后一个单词
 "\C-_": backward-kill-word
-# Ctrl+Shift+Backspace 删除光标之前所有
-"\xC2\x9F": backward-kill-line
-# Ctrl+Shift+Delete 删除光标之后所有
-"\e[3;6~": kill-line
 # Alt+Backspace 撤销
 "\e\d": undo
 EOF
 
 # config
 # htop
-install_dest home/config/htop/htoprc 444 <<'EOF'
-tree_view=1
-EOF
+install_dest home/config/htop/htoprc 444 </dev/null
 # bottom
 install_dest home/config/bottom/bottom.toml 444 <<'EOF'
 [flags]
+unnormalized_cpu = true
 process_memory_as_value = true
 process_command = true
 hide_k_threads = true
