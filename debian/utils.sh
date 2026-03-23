@@ -12,6 +12,7 @@ tar -xzO btm | install /dev/stdin /usr/bin/btm
 # home
 install_dest home/bashrc <<'EOF'
 # env
+export CURL_CA_BUNDLE=${dest:?}/etc/ssl/certs/ca-certificates.crt
 export EDITOR='micro'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
 export LESSSECURE=1 LESSHISTFILE=- LESS='--RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
 # done
@@ -239,9 +240,6 @@ EOF
 
 # setup
 install_setup <<'EOF'
-# etc
-ln -vsf {${dest:?},}/etc/ssl/certs/ca-certificates.crt
-
 # chattr
 chattr -RV +i ${dest:?}/home/config/*
 EOF

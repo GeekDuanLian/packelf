@@ -250,11 +250,12 @@ chkconfig sshd off
 install /dev/stdin /etc/init.d/dropbear <<'EOF'
 #!/bin/bash
 # chkconfig: 2345 55 25
+# description: dropbear
 
 . /etc/rc.d/init.d/functions
 
 PROG='dropbear'
-OPTS='-Rajkw'
+OPTS='-Rajk'
 EXEC="/opt/packelf/${PROG}"
 PIDFILE="/run/${PROG}.pid"
 LOCKFILE="/var/lock/subsys/${PROG}"
