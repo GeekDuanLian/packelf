@@ -108,9 +108,10 @@ EOF
 
 # bin
 cd "${GITHUB_WORKSPACE}"
+git rev-parse --short HEAD >version
 mkdir -p dropbear-windows/{current,xp}
-cp "${current}"/dropbear.exe    /d/cygwin64/bin/{cygwin1,cygcrypt-2,cygz,cyggcc_s-seh-1}.dll dropbear-windows/current/
-cp      "${xp}"/dropbear.exe /d/cygwin64_xp/bin/{cygwin1,cygcrypt-0,cygz,cyggcc_s-seh-1}.dll dropbear-windows/xp/
+cp version "${current}"/dropbear.exe    /d/cygwin64/bin/{cygwin1,cygcrypt-2,cygz,cyggcc_s-seh-1}.dll dropbear-windows/current/
+cp version      "${xp}"/dropbear.exe /d/cygwin64_xp/bin/{cygwin1,cygcrypt-0,cygz,cyggcc_s-seh-1}.dll dropbear-windows/xp/
 7z a -tzip dropbear-windows.zip dropbear-windows
 
 # done
