@@ -142,7 +142,7 @@ verbs: [
         execution: ":quit"
     }
     {
-        key: "ctrl-e"
+        key: "ctrl-t"
         execution: ":toggle_tree"
     }
     {
@@ -158,36 +158,42 @@ verbs: [
         execution: ":focus {path}"
     }
     {
+        invocation: "exec {cmd}"
+        execution: "{exec} {file}"
+        set_working_dir: true
+        leave_broot: false
+    }
+    {
         key: "F2"
         invocation: "mv {new_filename:file-name}"
-        execution: "mv {file} {parent}/{new_filename}"
+        execution:  "mv {file} {parent}/{new_filename}"
         leave_broot: false
         auto_exec: false
     }
     {
         key: "F3"
         invocation: "cp {new_filename:file-name}"
-        execution: "cp {file} {parent}/{new_filename}"
+        execution:  "cp {file} {parent}/{new_filename}"
         leave_broot: false
         auto_exec: false
     }
     {
-        invocation: "run {exec}"
-        execution: "{exec} {file}"
-        set_working_dir: true
-        leave_broot: false
+        shortcut = "t"
+        invocation = "touch {path}"
+        execution  = "touch {path}"
+        leave_broot = false
     }
     {
         shortcut: "s"
         invocation: "bash"
-        execution: "bash"
+        execution:  "bash"
         set_working_dir: true
         leave_broot: false
     }
     {
         shortcut: "e"
         invocation: "edit"
-        execution: "$EDITOR +{line} {file}"
+        execution:  "$EDITOR +{line} {file}"
         apply_to: "file"
         leave_broot: false
     }
