@@ -225,21 +225,16 @@ install_dest home/config/micro/settings.json 444 <<'EOF'
 EOF
 install_dest home/config/micro/bindings.json 444 <<'EOF'
 {
-    "CtrlLeft"   : "SelectLeft",
-    "CtrlRight"  : "SelectRight",
-    "CtrlUp"     : "SelectUp",
-    "CtrlDown"   : "SelectDown",
-    "CtrlHome"   : "SelectToStartOfText",
-    "CtrlEnd"    : "SelectToEndOfLine",
-    "AltHome"    : "CursorStart",
-    "AltEnd"     : "CursorEnd",
-    "CtrlAltHome": "SelectToStart",
-    "CtrlAltEnd" : "SelectToEnd",
+    "CtrlLeft" : "SelectLeft",
+    "CtrlRight": "SelectRight",
+    "CtrlUp"   : "SelectUp",
+    "CtrlDown" : "SelectDown",
+    "CtrlAltLeft" : "SelectToStartOfText",
+    "CtrlAltRight": "SelectToEndOfLine",
+    "CtrlAltUp"   : "SelectToStart",
+    "CtrlAltDown" : "SelectToEnd",
     "Ctrl-g": "JumpLine",
-    "Alt-," : "FindPrevious",
-    "Alt-." : "FindNext",
-    "Alt-e" : "CommandMode",
-    "Alt-m" : "command-edit:setlocal filetype ",
+    "Ctrl-t": "command-edit:setlocal filetype ",
     "Ctrl-d": "Quit"
 }
 EOF
