@@ -159,7 +159,7 @@ verbs: [
     }
     {
         invocation: "exec {cmd}"
-        execution: "{exec} {file}"
+        execution: "{cmd} {file}"
         set_working_dir: true
         leave_broot: false
     }
@@ -178,10 +178,10 @@ verbs: [
         auto_exec: false
     }
     {
-        shortcut = "t"
-        invocation = "touch {path}"
-        execution  = "touch {path}"
-        leave_broot = false
+        shortcut: "t"
+        invocation: "touch {path}"
+        execution:  "touch {path}"
+        leave_broot: false
     }
     {
         shortcut: "s"
