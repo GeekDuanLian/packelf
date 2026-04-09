@@ -146,12 +146,32 @@ verbs: [
         execution: ":toggle_tree"
     }
     {
+        key: "ctrl-f"
+        execution: ":total_search"
+    }
+    {
         key: "ctrl-s"
         execution: ":toggle_stage"
     }
     {
         key: "ctrl-g"
         execution: ":toggle_staging_area"
+    }
+    {
+        key: "cmd-up"
+        execution: ":focus .."
+    }
+    {
+        key: "cmd-down"
+        execution: ":focus {path}"
+    }
+    {
+        key: "cmd-left"
+        execution: ":input_go_to_start"
+    }
+    {
+        key: "cmd-right"
+        execution: ":input_go_to_end"
     }
     {
         invocation: "cd {path}"
