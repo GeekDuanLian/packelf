@@ -15,7 +15,6 @@ case "$( dpkg --print-architecture )" in
     arm64 ) : aarch64;;
 esac; arch="${_}"
 
-# https://packages.debian.org/index
 # postinst: /var/lib/dpkg/info/
 # rpm: rpm -q --scripts
 install_dest () {

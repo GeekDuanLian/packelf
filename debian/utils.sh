@@ -1,13 +1,21 @@
 #!/bin/false
 
 # shellcheck disable=SC2034
-pkg=(bash curl less grep diffutils htop broot micro traceroute rsync netcat-openbsd smartmontools)
-bin=(/usr/bin/{bash,curl,less,grep,diff,htop,broot,micro,traceroute,rsync,nc,btm} /usr/sbin/smartctl)
+pkg=(bash curl less grep diffutils jq htop broot traceroute rsync netcat-openbsd smartmontools)
+bin=(/usr/bin/{bash,curl,less,grep,diff,jq,htop,broot,traceroute,rsync,nc} /usr/sbin/smartctl)
 etc=(/etc/ssl/certs/ca-certificates.crt)
 
 # bottom
 curl -fsSL 'https://github.com/ClementTsang/bottom/releases/latest/download/'"bottom_${arch:?}-unknown-linux-gnu.tar.gz" |
 tar -xzO btm | install /dev/stdin /usr/bin/btm
+bin+=(/usr/bin/btm)
+
+# edit
+[[ "${arch}" != 'i686' ]] && {
+    curl -fsSL "$( curl -fsSL 'https://api.github.com/repos/microsoft/edit/releases/latest' | jq -Mrc '.assets[] | select(.name|endswith("-'"${arch:?}"'-linux-gnu.tar.gz")).browser_download_url' )" |
+    tar -xzO edit | install /dev/stdin /usr/bin/edit
+    bin+=(/usr/bin/edit)
+}
 
 # home
 install_dest home/bashrc <<'EOF'
@@ -138,10 +146,6 @@ verbs: [
         execution: ":select_last"
     }
     {
-        key: "ctrl-d"
-        execution: ":quit"
-    }
-    {
         key: "ctrl-t"
         execution: ":toggle_tree"
     }
@@ -223,40 +227,6 @@ verbs: [
         apply_to: "text_file"
     }
 ]
-EOF
-# micro
-mkdir -pm711 home/config/micro/buffers
-mkdir -pm711 home/config/micro/backups
-install_dest home/config/micro/settings.json 444 <<'EOF'
-{
-    "pluginchannels": [], // 不加载远程插件列表
-    "savehistory": false, // 不保存历史命令
-    "statusformatl": "  $(filename) $(modified)", // 状态栏左侧文本
-    "statusformatr": "$(opt:filetype) | $(opt:fileformat) | $(opt:encoding) | $(line),$(col) | $(lines) 行 $(percentage)%  ", // 状态栏右侧文本
-    "scrollbar": true, // 显示滚动条
-    "clipboard": "terminal", // 剪切板使用 OSC 52
-    "fileformat": "unix", // 文件换行格式
-    "hlsearch": true, // 高亮所有搜索匹配
-    "hltrailingws": true, // 高亮尾随空格
-    "diffgutter": true, // 提示已更改行
-    "tabstospaces": true, // Tab 键入空格
-    "mkparents": true // 自动创建所需文件夹
-}
-EOF
-install_dest home/config/micro/bindings.json 444 <<'EOF'
-{
-    "CtrlLeft" : "SelectLeft",
-    "CtrlRight": "SelectRight",
-    "CtrlUp"   : "SelectUp",
-    "CtrlDown" : "SelectDown",
-    "CtrlAltLeft" : "SelectToStartOfText",
-    "CtrlAltRight": "SelectToEndOfLine",
-    "CtrlAltUp"   : "SelectToStart",
-    "CtrlAltDown" : "SelectToEnd",
-    "Ctrl-g": "JumpLine",
-    "Ctrl-t": "command-edit:setlocal filetype ",
-    "Ctrl-d": "Quit"
-}
 EOF
 
 # setup

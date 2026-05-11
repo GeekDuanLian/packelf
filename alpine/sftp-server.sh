@@ -6,7 +6,7 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/openssh/APKBUILD
 
 # var
-pkgver=(10.2_p1 66f3dd646179e71aaf41c33b6f14a207dc873d71d24f11c130a89dee317ee45398b818e5b94887b5913240964a38630d7bca3e481e0f1eff2e41d9e1cfdbdfc5)
+pkgver=(10.3_p1 cb2bd67086491c25e305879b924c3dfa8236502a60c7f250b2fd17d2d9a79ebfc2e40b2f43e42dcf598cc510996e00cc03df9b8e38f34bc2dc71a3d4ff3788fa)
 : "${0##*/}"; result="/result/${_%.*}"
 
 # apk
