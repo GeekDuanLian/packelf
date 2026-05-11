@@ -21,7 +21,7 @@ bin+=(/usr/bin/btm)
 install_dest home/bashrc <<'EOF'
 # env
 export CURL_CA_BUNDLE=${dest:?}/etc/ssl/certs/ca-certificates.crt
-export EDITOR='micro'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
+export EDITOR='edit'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
 export LESSSECURE=1 LESSHISTFILE=- LESS='--RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
 # done
 [[ "${-}" == *i* ]] || return 0

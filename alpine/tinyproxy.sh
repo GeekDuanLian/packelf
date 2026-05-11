@@ -55,7 +55,7 @@ setup="${result}"/setup/tinyproxy.sh
 { echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${setup}"
 cat >>"${setup}" <<'EOF'
 # etc
-install -Dm644 /dev/null /etc/tinyproxy/tinyproxy.conf
+test -f /etc/tinyproxy/tinyproxy.conf || install -Dm644 "${1:?${_}}" "${_}"
 
 # service
 service='tinyproxy'
