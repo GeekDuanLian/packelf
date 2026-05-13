@@ -239,7 +239,7 @@ ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
 systemctl enable  "${service}" || { ln -vsf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
 systemctl start   "${service}"
-systemctl status  "${service}"
+systemctl status  "${service}" --no-pager
 EOF
 
 # init.d if needed
