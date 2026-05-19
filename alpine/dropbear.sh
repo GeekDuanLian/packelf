@@ -245,8 +245,6 @@ EOF
 # init.d if needed
 # shellcheck disable=SC2329
 init.d () {
-service sshd stop
-chkconfig sshd off
 install /dev/stdin /etc/init.d/dropbear <<'EOF'
 #!/bin/bash
 # chkconfig: 2345 55 25
@@ -288,6 +286,8 @@ esac
 EOF
 chkconfig --add dropbear
 chkconfig dropbear on
+chkconfig sshd off
+service sshd stop
 service dropbear start
 service dropbear status
 }; unset init.d

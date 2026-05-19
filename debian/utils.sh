@@ -162,22 +162,6 @@ verbs: [
         execution: ":toggle_staging_area"
     }
     {
-        key: "cmd-up"
-        execution: ":focus .."
-    }
-    {
-        key: "cmd-down"
-        execution: ":focus {path}"
-    }
-    {
-        key: "cmd-left"
-        execution: ":input_go_to_start"
-    }
-    {
-        key: "cmd-right"
-        execution: ":input_go_to_end"
-    }
-    {
         invocation: "cd {path}"
         execution: ":focus {path}"
     }
