@@ -37,7 +37,7 @@ jobs:
       run: |
         mkdir "${arch}"; sed -i 's|\${dest:?}|'"${dest:?}"'|g' ./debian/*.sh debian.sh ./alpine/*.sh
         pkg="$( grep -hoP '^pkg=\(\K[^)]+' ./debian/*.sh )"
-        printf '%s\n' 'FROM debian:trixie-slim' 'COPY debian.sh /root/' 'RUN apt-get update && apt-get upgrade -y && apt-get install -y patchelf '"$(echo ${pkg})" |
+        printf '%s\n' 'FROM debian:sid-slim' 'COPY debian.sh /root/' 'RUN apt-get update && apt-get upgrade -y && apt-get install -y patchelf '"$(echo ${pkg})" |
         podman build --platform=linux/"${platform}" -f /dev/stdin -t worker-debian .
         podman run --volume=./"${arch}":/result --volume=./debian:/workdir --workdir=/workdir worker-debian /root/debian.sh
 

@@ -1,8 +1,8 @@
 #!/bin/false
 
 # shellcheck disable=SC2034
-pkg=(bash curl less grep diffutils jq htop broot traceroute rsync netcat-openbsd smartmontools)
-bin=(/usr/bin/{bash,curl,less,grep,diff,jq,htop,broot,traceroute,rsync,nc} /usr/sbin/smartctl)
+pkg=(bash curl less grep diffutils yq-go htop broot traceroute rsync netcat-openbsd smartmontools)
+bin=(/usr/bin/{bash,curl,less,grep,diff,yq,htop,broot,traceroute,rsync,nc} /usr/sbin/smartctl)
 etc=(/etc/ssl/certs/ca-certificates.crt)
 
 # bottom
@@ -12,7 +12,7 @@ bin+=(/usr/bin/btm)
 
 # edit
 [[ "${arch}" != 'i686' ]] && {
-    curl -fsSL "$( curl -fsSL 'https://api.github.com/repos/microsoft/edit/releases/latest' | jq -Mrc '.assets[] | select(.name|endswith("-'"${arch:?}"'-linux-gnu.tar.gz")).browser_download_url' )" |
+    curl -fsSL "$( curl -fsSL 'https://api.github.com/repos/microsoft/edit/releases/latest' | yq -r '.assets[] | select(.name == "*-'"${arch:?}"'-linux-gnu.tar.gz") | .browser_download_url' )" |
     tar -xzO edit | install /dev/stdin /usr/bin/edit
     bin+=(/usr/bin/edit)
 }
