@@ -23,6 +23,7 @@ install_dest home/bashrc <<'EOF'
 export CURL_CA_BUNDLE=${dest:?}/etc/ssl/certs/ca-certificates.crt
 export EDITOR='edit'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
 export LESSSECURE=1 LESSHISTFILE=- LESS='--RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
+export HTOPRC='/dev/null'
 # done
 [[ "${-}" == *i* ]] || return 0
 
@@ -104,11 +105,8 @@ set history-preserve-point on
 "\e\d": undo
 EOF
 
-# config
-# htop
-install_dest home/config/htop/htoprc 444 </dev/null
 # bottom
-install_dest home/config/bottom/bottom.toml 444 <<'EOF'
+install_dest home/config/bottom/bottom.toml <<'EOF'
 [flags]
 unnormalized_cpu = true
 process_memory_as_value = true
@@ -130,9 +128,8 @@ theme = "nord"
     default = true
 EOF
 # broot
-mkdir -pm711 home/config/broot/launcher
-install_dest home/config/broot/launcher/refused 444 </dev/null
-install_dest home/config/broot/conf.hjson 444 <<'EOF'
+install_dest home/config/broot/launcher/refused </dev/null
+install_dest home/config/broot/conf.hjson <<'EOF'
 default_flags: -hip --sort-by-type-dirs-first
 date_time_format: %Y-%m-%d %H:%M:%S
 icon_theme: nerdfont
@@ -211,10 +208,4 @@ verbs: [
         apply_to: "text_file"
     }
 ]
-EOF
-
-# setup
-install_setup <<'EOF'
-# chattr
-chattr -RV +i ${dest:?}/home/config/*
 EOF

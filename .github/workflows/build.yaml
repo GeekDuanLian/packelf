@@ -52,7 +52,9 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       run: |
-        ( cd "${arch}"; mkdir version; git rev-parse --short HEAD >version/version; tar --numeric-owner --owner=0 --group=0 -czf ../"${arch}".tar.gz * )
+        ( cd "${arch}"; install -Dm644 /dev/stdin version/version <<<"${GITHUB_SHA::7}"
+          tar --numeric-owner --owner=0 --group=0 -czf ../"${arch}".tar.gz * )
         ! gh release view result &>/dev/null &&
-        gh release create result "${arch}".tar.gz -n 'download here' ||
+        gh release create result "${arch}".tar.gz ||
         gh release upload result "${arch}".tar.gz --clobber
+        gh release edit result -n "${GITHUB_SHA::7}"
