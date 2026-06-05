@@ -56,5 +56,8 @@ for i in "${workdir}"/*.sh; do
     cd ..
 done
 
+# print version
+dpkg-query --show --showformat='${binary:Package} ${Version}\n'
+
 # done
 true

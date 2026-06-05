@@ -29,7 +29,7 @@ export LESSSECURE=1 LESSHISTFILE=- LESS='--RAW-CONTROL-CHARS --ignore-case --mou
 # bash
 HISTSIZE='' HISTFILESIZE='' # 不限制历史记录数量
 HISTTIMEFORMAT='%F %T ' # 历史记录显示执行时间
-HISTCONTROL=ignoredups # 不保存重复的历史记录
+HISTCONTROL='ignoredups' # 不保存重复的历史记录
 PROMPT_COMMAND='history -a' # 立即更新历史记录
 shopt -s histappend # 不覆盖历史记录
 shopt -s checkwinsize # 自动检测窗口大小
