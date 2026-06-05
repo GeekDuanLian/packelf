@@ -61,9 +61,9 @@ test -f /etc/tinyproxy/tinyproxy.conf || install -Dm644 "${1:?${_}}" "${_}"
 service='tinyproxy'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
+ln -vsTf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl enable  "${service}" || { ln -vsf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
+systemctl enable  "${service}" || { ln -vsTf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
 systemctl start   "${service}"
 systemctl status  "${service}" --no-pager
 EOF

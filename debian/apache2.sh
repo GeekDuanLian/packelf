@@ -101,6 +101,10 @@ EOF
 
 # setup
 install_setup <<'EOF'
+# etc
+test -f /etc/apache2/apache2.conf || install -Dm644 "${1:?${_}}" "${_}"
+ln -vsTf ${dest:?}/usr/lib/apache2/modules /etc/apache2/modules
+
 # user
 u='apache2'
 groupadd -r -f "${u}"
@@ -110,20 +114,16 @@ id -u "${u}" &>/dev/null || useradd -r -g "${u}" -Md /var/empty/"${u}" -s /usr/s
 mkdir -p /etc/apache2
 mkdir -pm700 /var/log/apache2 /var/empty/apache2
 
-# etc
-ln -vsf ${dest:?}/usr/lib/apache2/modules /etc/apache2/
-[[ "${1}" ]] && install -m644 "${1}" /etc/apache2/apache2.conf
-
 # logrotate
-ln -vsf {${dest:?},}/etc/logrotate.d/apache2
+ln -vsTf {${dest:?},}/etc/logrotate.d/apache2
 
 # service
 service='apache2'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
+ln -vsTf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl enable  "${service}" || { ln -vsf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
+systemctl enable  "${service}" || { ln -vsTf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
 systemctl start   "${service}"
 systemctl status  "${service}" --no-pager
 EOF

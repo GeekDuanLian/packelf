@@ -226,18 +226,18 @@ install -dm711 /etc/dropbear
 install -dm700 /run/dropbear
 
 # log
-ln -vsf {${dest:?},}/etc/rsyslog.d/dropbear.conf
+ln -vsTf {${dest:?},}/etc/rsyslog.d/dropbear.conf
 systemctl restart rsyslog
 # logrotate
-ln -vsf {${dest:?},}/etc/logrotate.d/dropbear
+ln -vsTf {${dest:?},}/etc/logrotate.d/dropbear
 
 # service
 service='dropbear'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
+ln -vsTf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl enable  "${service}" || { ln -vsf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
+systemctl enable  "${service}" || { ln -vsTf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
 systemctl start   "${service}"
 systemctl status  "${service}" --no-pager
 EOF

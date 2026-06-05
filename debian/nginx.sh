@@ -121,6 +121,10 @@ EOF
 
 # setup
 install_setup <<'EOF'
+# etc
+test -f /etc/nginx/nginx.conf || install -Dm644 "${1:?${_}}" "${_}"
+ln -vsTf ${${dest:?},}/etc/nginx/mime.types
+
 # user
 u='nginx'
 groupadd -r -f "${u}"
@@ -131,20 +135,16 @@ mkdir -p /etc/nginx
 mkdir -pm700 /var/log/nginx /var/empty/nginx
 install -dm700 -g nginx -o nginx /var/lib/nginx
 
-# etc
-ln -vsf ${dest:?}/etc/nginx/mime.types /etc/nginx/
-[[ "${1}" ]] && install -m644 "${1}" /etc/nginx/nginx.conf
-
 # logrotate
-ln -vsf {${dest:?},}/etc/logrotate.d/nginx
+ln -vsTf {${dest:?},}/etc/logrotate.d/nginx
 
 # service
 service='nginx'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
+ln -vsTf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl enable  "${service}" || { ln -vsf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
+systemctl enable  "${service}" || { ln -vsTf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
 systemctl start   "${service}"
 systemctl status  "${service}" --no-pager
 EOF

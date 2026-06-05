@@ -78,19 +78,19 @@ setup="${result}"/setup/pure-ftpd.sh
 { echo "${script_header}"; echo; } | install -Dm755 /dev/stdin "${setup}"
 cat >>"${setup}" <<'EOF'
 # etc
-install -dm700 /etc/pure-ftpd
-[[ "${1}" ]] && {
-    install -m600 "${1}".crt /etc/pure-ftpd/tls.crt
-    install -m600 "${1}".key /etc/pure-ftpd/tls.key
+test -d /etc/pure-ftpd || {
+    : "${1:?crt}"
+    install -Dm600 "${1}".crt /etc/pure-ftpd/tls.crt
+    install -Dm600 "${1}".key /etc/pure-ftpd/tls.key
 }
 
 # service
 service='pure-ftpd'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsf {${dest:?},}/etc/systemd/system/"${service}".service
+ln -vsTf {${dest:?},}/etc/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl enable  "${service}" || { ln -vsf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
+systemctl enable  "${service}" || { ln -vsTf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
 systemctl start   "${service}"
 systemctl status  "${service}" --no-pager
 EOF
