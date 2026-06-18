@@ -80,7 +80,7 @@ patch -p0 <<'EOF'
 @@ -80,6 +80,26 @@
  		return;
  	}
-
+ 
 +	// 限制登录
 +	FILE *allowed_users = fopen("/etc/dropbear/allowed_users", "r");
 +	if (allowed_users) {
@@ -104,10 +104,10 @@ patch -p0 <<'EOF'
  	if (passwordlen > DROPBEAR_MAX_PASSWORD_LEN) {
  		dropbear_log(LOG_WARNING,
  				"Too-long password attempt for '%s' from %s",
-@@ -105,7 +112,28 @@
+@@ -105,7 +125,30 @@
  		return;
  	}
-
+ 
 +	// 初始化
 +	int login_attempts = 0;
 +	char attempts_file_path[256];
@@ -126,6 +126,8 @@ patch -p0 <<'EOF'
 +		return;
 +	}
 +
++	// 降权前打开文件准备写入
++	attempts_file = fopen(attempts_file_path, "w");
  	if (constant_time_strcmp(testcrypt, passwdcrypt) == 0) {
 +		// 密码正确，重置次数
 +		login_attempts = 0;
@@ -133,7 +135,7 @@ patch -p0 <<'EOF'
  		if (svr_opts.multiauthmethod && (ses.authstate.authtypes & ~AUTH_TYPE_PASSWORD)) {
  			/* successful password authentication, but extra auth required */
  			dropbear_log(LOG_NOTICE,
-@@ -123,12 +151,22 @@
+@@ -123,12 +166,18 @@
  			send_msg_userauth_success();
  		}
  	} else {
@@ -146,15 +148,11 @@ patch -p0 <<'EOF'
  				svr_ses.addrstring);
  		send_msg_userauth_failure(0, 1);
  	}
-+
 +	// 写入文件
-+	attempts_file = fopen(attempts_file_path, "w");
-+	if (attempts_file) {
-+		fprintf(attempts_file, "%d\n", login_attempts);
-+		fclose(attempts_file);
-+	}
++	fprintf(attempts_file, "%d\n", login_attempts);
++	fclose(attempts_file);
  }
-
+ 
  #endif
 
 --- src/svr-auth.c
