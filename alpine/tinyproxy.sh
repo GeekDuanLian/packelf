@@ -34,7 +34,7 @@ for bin in tinyproxy; do
     install -Ds src/"${bin}" "${result}/${bin}"
 done
 # service
-install -Dm644 /dev/stdin "${result}"/etc/systemd/system/tinyproxy.service <<'EOF'
+install -Dm644 /dev/stdin "${result}"/usr/local/lib/systemd/system/tinyproxy.service <<'EOF'
 [Unit]
 Description=tinyproxy
 After=network.target
@@ -61,9 +61,9 @@ test -f /etc/tinyproxy/tinyproxy.conf || install -Dm644 "${1:?${_}}" "${_}"
 service='tinyproxy'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsTf {${dest:?},}/etc/systemd/system/"${service}".service
+install -vDm644 {${dest:?},}/usr/local/lib/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl enable  "${service}" || { ln -vsTf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
+systemctl enable  "${service}"
 systemctl start   "${service}"
 systemctl status  "${service}" --no-pager
 EOF

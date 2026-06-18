@@ -62,7 +62,7 @@ for bin in pure-ftpd pure-pw; do
     install -Ds src/"${bin}" "${result}/${bin}"
 done
 # service
-install -Dm644 /dev/stdin "${result}"/etc/systemd/system/pure-ftpd.service <<'EOF'
+install -Dm644 /dev/stdin "${result}"/usr/local/lib/systemd/system/pure-ftpd.service <<'EOF'
 [Unit]
 Description=pure-ftpd
 After=network.target
@@ -88,9 +88,9 @@ test -d /etc/pure-ftpd || {
 service='pure-ftpd'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsTf {${dest:?},}/etc/systemd/system/"${service}".service
+install -vDm644 {${dest:?},}/usr/local/lib/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl enable  "${service}" || { ln -vsTf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
+systemctl enable  "${service}"
 systemctl start   "${service}"
 systemctl status  "${service}" --no-pager
 EOF

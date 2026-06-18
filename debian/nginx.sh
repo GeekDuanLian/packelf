@@ -122,7 +122,7 @@ EOF
 # setup
 install_setup <<'EOF'
 # etc
-test -f /etc/nginx/nginx.conf || install -Dm644 "${1:?${_}}" "${_}"
+test -f /etc/nginx/nginx.conf || install -vDm644 "${1:?${_}}" "${_}"
 ln -vsTf ${${dest:?},}/etc/nginx/mime.types
 
 # user
@@ -142,9 +142,9 @@ ln -vsTf {${dest:?},}/etc/logrotate.d/nginx
 service='nginx'
 systemctl stop    "${service}" || :
 systemctl disable "${service}" || :
-ln -vsTf {${dest:?},}/etc/systemd/system/"${service}".service
+install -vDm644 {${dest:?},}/usr/local/lib/systemd/system/"${service}".service
 systemctl daemon-reload
-systemctl enable  "${service}" || { ln -vsTf /etc/systemd/system{,/multi-user.target.wants}/"${service}".service; systemctl daemon-reload; }
+systemctl enable  "${service}"
 systemctl start   "${service}"
 systemctl status  "${service}" --no-pager
 EOF
