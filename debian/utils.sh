@@ -18,12 +18,17 @@ bin+=(/usr/bin/btm)
 }
 
 # home
+install_dest home/bash_profile <<'EOF'
+. ~/.bashrc
+EOF
 install_dest home/bashrc <<'EOF'
 # env
-export CURL_CA_BUNDLE=${dest:?}/etc/ssl/certs/ca-certificates.crt
+export PATH='${dest:?}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+export LANG='en_US.UTF-8'
 export EDITOR='edit'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
 export PAGER='less'
 export LESSSECURE=1 LESSHISTFILE=- LESS='--RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
+export CURL_CA_BUNDLE='${dest:?}/etc/ssl/certs/ca-certificates.crt'
 export HTOPRC='/dev/null'
 # done
 [[ "${-}" == *i* ]] || return 0
