@@ -80,7 +80,7 @@ patch -p0 <<'EOF'
 @@ -80,6 +80,26 @@
  		return;
  	}
- 
+
 +	// 限制登录
 +	FILE *allowed_users = fopen("/etc/dropbear/allowed_users", "r");
 +	if (allowed_users) {
@@ -107,7 +107,7 @@ patch -p0 <<'EOF'
 @@ -105,7 +125,30 @@
  		return;
  	}
- 
+
 +	// 初始化
 +	int login_attempts = 0;
 +	char attempts_file_path[256];
@@ -152,7 +152,7 @@ patch -p0 <<'EOF'
 +	fprintf(attempts_file, "%d\n", login_attempts);
 +	fclose(attempts_file);
  }
- 
+
  #endif
 
 --- src/svr-auth.c
@@ -209,6 +209,8 @@ Description=dropbear
 After=network.target
 
 [Service]
+RuntimeDirectory=dropbear
+RuntimeDirectoryMode=0700
 ExecStart=${dest:?}/dropbear -RFajk
 KillMode=process
 
@@ -221,7 +223,6 @@ setup="${result}"/setup/dropbear.sh
 cat >>"${setup}" <<'EOF'
 # etc
 install -dm711 /etc/dropbear
-install -dm700 /run/dropbear
 
 # log
 ln -vsTf {${dest:?},}/etc/rsyslog.d/dropbear.conf
@@ -282,6 +283,7 @@ case "${1}" in
     * ) echo "Usage: ${0} {start|stop|restart|status}"; exit 1;;
 esac
 EOF
+install -dm700 /run/dropbear
 chkconfig --add dropbear
 chkconfig dropbear on
 chkconfig sshd off
