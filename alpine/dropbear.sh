@@ -181,9 +181,11 @@ install -Dm644 /dev/stdin "${result}"/etc/logrotate.d/dropbear <<'EOF'
     rotate 6
     compress
     missingok
-    notifempty
+    nocreate
     dateext
+    dateyesterday
     dateformat -%Y-%m
+    sharedscripts
     postrotate
         /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true
     endscript

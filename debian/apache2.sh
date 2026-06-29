@@ -54,11 +54,14 @@ EOF
 # logrotate
 install_dest /etc/logrotate.d/apache2 <<'EOF'
 /var/log/apache2/*.log {
-    daily
-    rotate 180
+    monthly
+    rotate 6
     compress
     missingok
     nocreate
+    dateext
+    dateyesterday
+    dateformat -%Y-%m
     sharedscripts
     postrotate
         systemctl reload apache2
