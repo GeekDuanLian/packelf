@@ -114,10 +114,10 @@ EOF
 # bottom
 install_dest home/config/bottom/bottom.toml <<'EOF'
 [flags]
-unnormalized_cpu = true
-process_memory_as_value = true
-process_command = true
-hide_k_threads = true
+processes.unnormalized_cpu = true
+processes.default_memory_value = true
+processes.process_command = true
+processes.hide_k_threads = true
 [styles]
 theme = "nord"
 [[row]]
