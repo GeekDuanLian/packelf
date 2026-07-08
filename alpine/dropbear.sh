@@ -6,7 +6,7 @@ trap 'echoerr -e "${0}: \e[0;91mExit with Error Code ${?} at Line ${LINENO}\e[0m
 # https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/dropbear/APKBUILD
 
 # var
-pkgver=(2026.91 f335bffb18f6e4a261732b80d6887d1b2891a96a0eb5be0cc6bd96a8803eeea337967a2a9196bec78ac3f0d2cdb31e4b64598efb7f7ad97c652d51c458ccc5df)
+pkgver=(2026.92 74701cf1a47c38a8236f89bf8f06701856b958d48e64945d1e0ee9c9765fc71a06549d6a4e7d2737d00ce945265673068889550d2f1cf3782a5cf19e96819f45)
 : "${0##*/}"; result="/result/${_%.*}"
 script_header="$( head -4 "${0}" )"
 
