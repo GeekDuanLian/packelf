@@ -56,7 +56,7 @@ cat >localoptions.h <<'EOF'
 #define DROPBEAR_SHA1_96_HMAC 0
 
 // only ed25519
-#define DROPBEAR_RSA 0
+#define DROPBEAR_RSA 1
 #define DROPBEAR_RSA_SHA1 0
 #define DROPBEAR_ECDSA 0
 #define DROPBEAR_ED25519 1
