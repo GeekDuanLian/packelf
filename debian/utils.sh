@@ -25,7 +25,7 @@ install_dest home/bashrc <<'EOF'
 # env
 export PATH='${dest:?}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 export LANG='en_US.UTF-8'
-export EDITOR='edit'; export VISUAL="${EDITOR}"; alias e="${EDITOR}"
+export EDITOR='edit'; export VISUAL="${EDITOR}"
 export PAGER='less'
 export LESSSECURE=1 LESSHISTFILE=- LESS='--RAW-CONTROL-CHARS --ignore-case --mouse --use-color --LONG-PROMPT --chop-long-lines --quit-on-intr --quit-if-one-screen'
 export CURL_CA_BUNDLE='${dest:?}/etc/ssl/certs/ca-certificates.crt'
@@ -38,10 +38,11 @@ HISTSIZE='' HISTFILESIZE='' # 不限制历史记录数量
 HISTTIMEFORMAT='%F %T ' # 历史记录显示执行时间
 HISTCONTROL='ignoredups' # 不保存重复的历史记录
 PROMPT_COMMAND='history -a' # 立即更新历史记录
-shopt -s histappend # 不覆盖历史记录
+shopt -s histappend # 追加历史记录
 shopt -s checkwinsize # 自动检测窗口大小
 shopt -s extglob # 更多匹配操作符
 shopt -s globstar # ** 遍历操作符
+shopt -s checkjobs # 退出前提示后台任务
 set +H # 禁用历史记录扩展
 
 # PS1
@@ -57,6 +58,7 @@ alias diff='diff --color=auto -ur'
 alias ..='cd ..'
 alias l="ls -la --time-style='+%Y-%m-%d %H:%M:%S'"
 alias h='history'
+alias e="${EDITOR}"
 alias lsport='lsof -i4 -i6 -nP | grep LISTEN'
 zless () { zcat "${@}" | less; }
 EOF
@@ -85,30 +87,20 @@ set colored-completion-prefix on
 # 历史记录保存光标位置
 set history-preserve-point on
 
-# esc,esc 删除全部内容
+# Esc,Esc 删除全部内容
 "\e\e": kill-whole-line
-# ctrl+左 光标向前移动一个单词
+# Ctrl+左 光标向左移动一个单词
 "\e[1;5D": backward-word
-# ctrl+右 光标向后移动一个单词
+# Ctrl+右 光标向右移动一个单词
 "\e[1;5C": forward-word
-# cmd+左 光标向前移动一个单词
-"\e[1;9D": backward-word
-# cmd+右 光标向后移动一个单词
-"\e[1;9C": forward-word
-# pgup 光标向前移动一个单词
+# PgUp 光标向左移动一个单词
 "\e[5~": backward-word
-# pgdn 光标向后移动一个单词
+# PgDn 光标向右移动一个单词
 "\e[6~": forward-word
-# ctrl+上 根据已有输入向前查找历史记录
+# Ctrl+上 根据已有输入向前查找历史记录
 "\e[1;5A": history-search-backward
-# ctrl+下 根据已有输入向后查找历史记录
+# Ctrl+下 根据已有输入向后查找历史记录
 "\e[1;5B": history-search-forward
-# ctrl+backspace 删除前一个单词
-"\e[3;5~": kill-word
-# ctrl+delete 删除后一个单词
-"\C-_": backward-kill-word
-# Alt+Backspace 撤销
-"\e\d": undo
 EOF
 
 # bottom
